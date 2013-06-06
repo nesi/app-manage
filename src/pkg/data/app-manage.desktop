@@ -1,0 +1,23 @@
+[Desktop Entry]
+Categories=
+Comment=This starts an instance of app-manage
+Comment[en]=This starts an instance of app-manage
+Encoding=UTF-8
+Exec=/usr/bin/app-manage 
+GenericName=
+GenericName[en]=
+Icon=/usr/local/lib/grisu/icons/app-manage.png
+MimeType=
+Name=app-manage
+Name[en]=app-manage
+Path=
+ServiceTypes=
+SwallowExec=
+SwallowTitle=
+Terminal=true
+TerminalOptions=
+Type=Application
+URL=
+X-KDE-SubstituteUID=false
+X-KDE-Username=root
+
