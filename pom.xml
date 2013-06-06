@@ -30,6 +30,23 @@
 		</repository>
 	</repositories>
 
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/nesi/app-manage/issues</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>http://code.ceres.auckland.ac.nz/hudson/job/App-manage-SNAPSHOT</url>
+    </ciManagement>
+    <scm>
+        <connection>scm:git:git://github.com/nesi/app-manage.git</connection>
+        <developerConnection>scm:git:git@github.com:nesi/app-manage.git</developerConnection>
+        <url>https://github.com/nesi/app-manage</url>
+        <tag>HEAD</tag>
+    </scm>
+    <organization>
+        <name>Grisu open source project</name>
+    </organization>
 
 	<dependencies>
 
