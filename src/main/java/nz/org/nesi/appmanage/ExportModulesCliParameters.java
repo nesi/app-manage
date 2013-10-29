@@ -2,7 +2,7 @@ package nz.org.nesi.appmanage;
 
 import com.beust.jcommander.Parameter;
 
-public class ExportModulesCliParameters  {
+abstract class ExportModulesCliParameters  extends AppManageModule {
 
 	@Parameter(names = { "-o", "--output-folder" }, description = "the path to where the modules are supposed to end up", required = true)
 	private String output;
@@ -23,5 +23,8 @@ public class ExportModulesCliParameters  {
     public String getToken() {
         return token;
     }
+
+
+
 
 }
