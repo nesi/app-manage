@@ -42,13 +42,13 @@ class ImportModule extends ImportModulesCliParameters {
             try {
                 app = Utils.getApplication(file, getInput())
             } catch (Exception e) {
-                printMessage("Can't parse module file: '" + file + "': " + e.getLocalizedMessage(), true)
+                printMessage("Can't parse module file: '" + file + "': " + e.getLocalizedMessage()+". Ignored.", true)
                 return
             }
 
-            File appDir = new File(getAppRoot(), app);
+            File appDir = Utils.getApplicationFolder(getAppRoot(), app)
 
-            File moduleDir = new File(appDir, getToken());
+            File moduleDir = new File(appDir, AppManage.MODULE_DIR_NAME + File.separator + getToken())
 
             moduleDir.mkdirs()
             File newFile = new File(moduleDir, file.getName())

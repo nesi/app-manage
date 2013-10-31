@@ -4,6 +4,7 @@ import com.google.common.base.Charsets
 import com.google.common.io.Files
 import difflib.DiffUtils
 import difflib.Patch
+import groovy.io.FileType
 
 /**
  * Project: grisu
@@ -26,6 +27,22 @@ class Utils {
         } else {
             return false;
         }
+    }
+
+    static File getApplicationFolder(def appRoot, def app) {
+
+        if ( appRoot instanceof String ) {
+            appRoot = new File(appRoot)
+        }
+
+        appRoot.traverse(type: FileType.DIRECTORIES) { it ->
+            if ( it.getName().equalsIgnoreCase(app) ) {
+                return it
+            }
+        }
+
+        return new File(appRoot, app)
+
     }
 
     static String getApplication(def path, def appRoot) {

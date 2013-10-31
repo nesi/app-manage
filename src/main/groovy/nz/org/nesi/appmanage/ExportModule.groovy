@@ -24,7 +24,7 @@ class ExportModule extends ExportModulesCliParameters {
 
         def allmodules = []
         appRoot.traverse(type: FileType.FILES) { it ->
-            if (it.getAbsolutePath().toLowerCase().contains(File.separator + 'modules' + File.separator)) {
+            if (it.getAbsolutePath().toLowerCase().contains(File.separator + AppManage.MODULE_DIR_NAME + File.separator)) {
                 allmodules << it
             }
         }

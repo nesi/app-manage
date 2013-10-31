@@ -13,6 +13,8 @@ import grisu.frontend.view.cli.GrisuCliClient;
  */
 public class AppManage extends GrisuCliClient<MainCliParameters> {
 
+    public static final String MODULE_DIR_NAME = "modules";
+
     public static void main(String[] args) throws Exception{
         // basic housekeeping
         LoginManager.initGrisuClient("app-manage");
