@@ -34,7 +34,6 @@ class Utils {
 
         for ( def file : appRoot.listFiles() ) {
             if (file.isDirectory() && file.getName().equalsIgnoreCase(app)) {
-                println("XXX: "+file.getAbsolutePath())
                 return file
             }
         }
