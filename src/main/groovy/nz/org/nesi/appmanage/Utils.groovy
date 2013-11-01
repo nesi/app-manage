@@ -1,11 +1,8 @@
 package nz.org.nesi.appmanage
-
 import com.google.common.base.Charsets
 import com.google.common.io.Files
 import difflib.DiffUtils
 import difflib.Patch
-import groovy.io.FileType
-
 /**
  * Project: grisu
  *
@@ -35,9 +32,10 @@ class Utils {
             appRoot = new File(appRoot)
         }
 
-        appRoot.traverse(type: FileType.DIRECTORIES) { it ->
-            if ( it.getName().equalsIgnoreCase(app) ) {
-                return it
+        for ( def file : appRoot.listFiles() ) {
+            if (file.isDirectory() && file.getName().equalsIgnoreCase(app)) {
+                println("XXX: "+file.getAbsolutePath())
+                return file
             }
         }
 
