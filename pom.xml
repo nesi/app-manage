@@ -4,7 +4,7 @@
 	<artifactId>app-manage</artifactId>
 	<packaging>jar</packaging>
 	<version>0.5-SNAPSHOT</version>
-	<name>a grisu client</name>
+	<name>commandline application to maintain a structured application repository</name>
 
 	<parent>
 		<groupId>nz.org.nesi</groupId>
@@ -500,7 +500,7 @@
 
 
 	<properties>
-		<grisu.version>0.7.11</grisu.version>
+		<grisu.version>0.7.13</grisu.version>
 	</properties>
 </project>
 
