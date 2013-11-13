@@ -12,38 +12,19 @@ import org.apache.commons.io.FileUtils
  * Date: 6/06/13
  * Time: 10:53 AM
  */
-class ExportModule {
+class ExportModule extends ExportModulesCliParameters {
 
-    private final MainCliParameters mainParams
-    private final ExportModulesCliParameters exportParams
-
-    private final File appRoot
-    private final String token
-    private final File outputDir
-    private final boolean updateInfo
-    private final AppManage client
-    private final boolean verbose
-
-    public ExportModule(AppManage client) {
-        this.client = client
-        this.mainParams = client.mainParams
-        this.exportParams = client.exportModulesCliParameters
-        this.appRoot = client.mainParams.getApplicationsRootFile()
-        this.token = client.exportModulesCliParameters.getToken()
-        this.outputDir = new File(client.exportModulesCliParameters.getOutput())
-
-        if ( ! this.outputDir.exists() ) {
-            this.outputDir.mkdirs()
+    public void validate() {
+        if ( ! new File(getOutput()).exists() ) {
+            new File(getOutput()).mkdirs()
         }
-        this.updateInfo = client.exportModulesCliParameters.updateGrisu
-        this.verbose = client.mainParams.isVerbose()
     }
 
     public void execute() {
 
         def allmodules = []
         appRoot.traverse(type: FileType.FILES) { it ->
-            if (it.getAbsolutePath().toLowerCase().contains(File.separator + 'modules' + File.separator)) {
+            if (it.getAbsolutePath().toLowerCase().contains(File.separator + AppManage.MODULE_DIR_NAME + File.separator)) {
                 allmodules << it
             }
         }
@@ -57,7 +38,7 @@ class ExportModule {
         modules.each { file ->
             def app = Utils.getApplication(file, appRoot)
 
-            File appDir = new File(outputDir, app);
+            File appDir = new File(getOutput(), app);
             appDir.mkdirs()
             File newFile = new File(appDir, file.getName())
 
@@ -77,7 +58,7 @@ class ExportModule {
 
         }
 
-        if ( updateInfo ) {
+        if ( isUpdateGrisu() ) {
             println "Updating info..."
             ServiceInterface si = client.getServiceInterface();
             si.admin(Constants.REFRESH_GRID_INFO, null);

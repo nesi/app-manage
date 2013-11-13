@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nz.org.nesi</groupId>
 	<artifactId>app-manage</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1-SNAPSHOT</version>
-	<name>a grisu client</name>
+	<version>0.6</version>
+	<name>commandline application to maintain a structured application repository</name>
 
 	<parent>
 		<groupId>nz.org.nesi</groupId>
@@ -30,6 +29,23 @@
 		</repository>
 	</repositories>
 
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/nesi/app-manage/issues</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>http://code.ceres.auckland.ac.nz/hudson/job/App-manage-SNAPSHOT</url>
+    </ciManagement>
+    <scm>
+        <connection>scm:git:git://github.com/nesi/app-manage.git</connection>
+        <developerConnection>scm:git:git@github.com:nesi/app-manage.git</developerConnection>
+        <url>https://github.com/nesi/app-manage</url>
+        <tag>0.6</tag>
+    </scm>
+    <organization>
+        <name>Grisu open source project</name>
+    </organization>
 
 	<dependencies>
 
@@ -83,6 +99,11 @@
 			<scope>compile</scope>
 		</dependency>-->
 
+        <dependency>
+            <groupId>com.googlecode.java-diff-utils</groupId>
+            <artifactId>diffutils</artifactId>
+            <version>1.2.1</version>
+        </dependency>
 
 		<!-- test dependencies -->
 		<dependency>
@@ -479,7 +500,7 @@
 
 
 	<properties>
-		<grisu.version>0.7</grisu.version>
+		<grisu.version>0.8</grisu.version>
 	</properties>
 </project>
 

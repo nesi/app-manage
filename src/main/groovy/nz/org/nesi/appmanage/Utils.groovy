@@ -1,5 +1,8 @@
 package nz.org.nesi.appmanage
-
+import com.google.common.base.Charsets
+import com.google.common.io.Files
+import difflib.DiffUtils
+import difflib.Patch
 /**
  * Project: grisu
  *
@@ -8,6 +11,36 @@ package nz.org.nesi.appmanage
  * Time: 11:44 AM
  */
 class Utils {
+
+    public static boolean bothFilesEqual(File file1, File file2) {
+
+        List<String> file1Content = Files.readLines(file1, Charsets.UTF_8)
+        List<String> file2Content = Files.readLines(file2, Charsets.UTF_8)
+
+         Patch patch = DiffUtils.diff(file1Content, file2Content)
+
+        if (patch.getDeltas().size() == 0 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    static File getApplicationFolder(def appRoot, def app) {
+
+        if ( appRoot instanceof String ) {
+            appRoot = new File(appRoot)
+        }
+
+        for ( def file : appRoot.listFiles() ) {
+            if (file.isDirectory() && file.getName().equalsIgnoreCase(app)) {
+                return file
+            }
+        }
+
+        return new File(appRoot, app)
+
+    }
 
     static String getApplication(def path, def appRoot) {
 
