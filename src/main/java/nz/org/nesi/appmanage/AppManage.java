@@ -24,11 +24,12 @@ public class AppManage extends GrisuCliClient<MainCliParameters> {
         MainCliParameters params = new MainCliParameters();
         ExportModule expParams = new ExportModule();
         ImportModule impParams = new ImportModule();
+        CreateDocumentationCliParameters createDocParams = new CreateDoc();
 
         // create the client
         AppManage client = null;
         try {
-            client = new AppManage(params, expParams, impParams, args);
+            client = new AppManage(params, expParams, impParams, createDocParams, args);
         } catch(Exception e) {
             System.err.println("Could not start app-manage: "
                     + e.getLocalizedMessage());
@@ -47,26 +48,37 @@ public class AppManage extends GrisuCliClient<MainCliParameters> {
     final MainCliParameters mainParams;
     final ExportModule exportModulesCliParameters;
     final ImportModulesCliParameters importModulesCliParameters;
+    final CreateDocumentationCliParameters createDocumentationCliParameters;
 
     private final AppManageModule commandClass;
 
-    public AppManage(MainCliParameters params, ExportModule expParams, ImportModule impParams, String[] args) throws Exception {
+    public AppManage(MainCliParameters params, ExportModule expParams, ImportModule impParams, CreateDocumentationCliParameters createDocParams, String[] args) throws Exception {
         super(params, args);
         this.mainParams = params;
         this.exportModulesCliParameters = expParams;
         this.importModulesCliParameters = impParams;
+        this.createDocumentationCliParameters = createDocParams;
         jc = new JCommander(params);
         jc.setProgramName("app-manage");
         jc.addCommand("export-modules", expParams);
         jc.addCommand("import-modules", impParams);
+        jc.addCommand("create-doc", createDocParams);
 
-        jc.parse(args);
+        try {
+            jc.parse(args);
+        } catch (Exception e) {
+            System.err.println(e.getLocalizedMessage());
+            jc.usage();
+            System.exit(1);
+        }
         String command = jc.getParsedCommand();
 
         if ( "export-modules".equals(command) ) {
             commandClass = exportModulesCliParameters;
         }  else if ( "import-modules".equals(command) ) {
             commandClass = importModulesCliParameters;
+        } else if ( "create-doc".equals(command) ) {
+            commandClass = createDocumentationCliParameters;
         } else {
             commandClass = null;
             System.err.println( "No command '"+command+"'" );
@@ -84,6 +96,7 @@ public class AppManage extends GrisuCliClient<MainCliParameters> {
 
         this.exportModulesCliParameters.setClient(this);
         this.importModulesCliParameters.setClient(this);
+        this.createDocumentationCliParameters.setClient(this);
 
         commandClass.validate();
         commandClass.execute();

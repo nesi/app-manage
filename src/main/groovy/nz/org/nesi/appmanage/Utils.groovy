@@ -62,7 +62,9 @@ class Utils {
         }
 
         int i = relPath.indexOf(File.separator)
-        relPath = relPath.substring(0, i)
+        if ( i >= 0 ) {
+            relPath = relPath.substring(0, i)
+        }
 
         return relPath
 

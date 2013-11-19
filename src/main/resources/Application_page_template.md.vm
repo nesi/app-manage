@@ -1,0 +1,62 @@
+#set( $H = '#' )
+#set( $URL = 'https://github.com/nesi/applications/tree/master/' )
+#set( $RAW_URL = 'https://github.com/nesi/applications/raw/master/' )
+#if( $versions.size() > 0 )
+
+$H$H$H Details
+
+ * **Homepage**: #if ($homepage) $homepage #else n/a#end
+
+#if ($versions.size() == 1)
+ * **Version available**: $versions.get(0)
+    #else
+ * **Versions available**:
+#foreach ($version in $versions)
+   * $version
+#end
+#if ($licensing) * **Licensing**: ${licensing}#end
+#end
+
+#if ($description)
+
+$description
+#elseif($short_description)
+
+$short_description
+#end
+
+
+#if ($usage)
+
+$H$H$H Usage
+
+$usage
+#end
+
+#if ($jobs.hasLlJobs())
+$H$H$H Example jobs
+
+#foreach ($job in $jobs.getLlJobs())
+$H$H$H$H Job: [$job.getJobBaseName()]($URL/$application/jobs/$job.getJobBaseName())
+
+$H$H$H$H$H Job description
+
+```
+$job.getLl()
+```
+
+#if($job.getInputFiles().size() > 0)
+$H$H$H$H$H Input file(s)
+
+#foreach ($file in $job.getInputFiles())
+#set ($fileName = $file.getName())
+ * [$fileName]($RAW_URL/$application/jobs/$job.getJobBaseName()/files/$fileName)
+#end
+
+#end
+
+#end
+#end
+
+#end
+

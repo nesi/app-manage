@@ -49,6 +49,11 @@
 
 	<dependencies>
 
+        <dependency>
+            <groupId>grisu</groupId>
+            <artifactId>grid-jcommons</artifactId>
+            <version>2.13-SNAPSHOT</version>
+        </dependency>
 		<!-- the main grisu dependency. -->
 		<!-- comment this and uncomment the 'grisu-client-swing' dependency below if you need the swing dependencies -->
 		<dependency>
@@ -60,10 +65,29 @@
 		</dependency>
 
         <dependency>
+            <groupId>nz.org.nesi</groupId>
+            <artifactId>grin</artifactId>
+            <version>0.7</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
             <version>2.3.1.201302201838-r</version>
         </dependency>
+
+        <dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-tools</artifactId>
+			<version>2.0</version>
+		</dependency>
 
 <!-- 		<dependency> -->
 <!-- 			<groupId>grisu.frontend</groupId> -->
@@ -500,7 +524,7 @@
 
 
 	<properties>
-		<grisu.version>0.8</grisu.version>
+		<grisu.version>0.8.2</grisu.version>
 	</properties>
 </project>
 

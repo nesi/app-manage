@@ -1,0 +1,25 @@
+#set( $H = '#' )
+#if( $versions.size() > 0 )
+$H$H$H #if($appSubPage)[$application](wiki/$appSubPage)#else$application#end
+
+#if($description)$description #end
+
+
+   **Homepage**: #if ($homepage) $homepage #else n/a#end
+
+#if ($versions.size() == 1)
+
+   **Version available**:
+
+#else
+
+   **Versions available**:
+
+#end
+#foreach ($version in $versions)
+ * $version
+#end
+#end
+
+
+

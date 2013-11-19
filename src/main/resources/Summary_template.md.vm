@@ -1,0 +1,11 @@
+#set( $H = '#' )
+
+#foreach ($app in $applications.keySet())
+#set( $doc = $applications.get($app) )
+#set ($application = $doc.getApplicationName())
+#if( $doc.getProperty("versions").size() > 0 )
+#set( $appSubPage = $doc.getProperty("appSubPage"))
+* #if($appSubPage)[$application](wiki/$appSubPage)#else$application#end
+
+#end
+#end
