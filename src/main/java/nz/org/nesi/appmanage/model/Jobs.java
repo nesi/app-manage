@@ -82,7 +82,6 @@ public class Jobs {
         for ( Job j : getJobs() ) {
             if (StringUtils.isNotBlank(j.getLl()) ) {
                 result.add(j);
-                System.out.println("ADDING: "+j.getJobFolder());
             }
         }
         return result;

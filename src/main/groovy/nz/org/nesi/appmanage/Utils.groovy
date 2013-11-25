@@ -33,7 +33,10 @@ class Utils {
         }
 
         for ( def file : appRoot.listFiles() ) {
-            if (file.isDirectory() && file.getName().equalsIgnoreCase(app)) {
+            if (file.isDirectory() && file.getName().equals(app)) {
+                return file
+            } else if ( file.isDirectory() && file.getName().equalsIgnoreCase(app)) {
+                System.err.println("Case inconsistency: "+app+", using "+file.getName()+" but that might cause problems for some usecases.");
                 return file
             }
         }

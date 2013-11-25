@@ -72,9 +72,12 @@ class CreateDoc extends CreateDocumentationCliParameters {
         def properties = [:]
 
         Map<String, Map<String, Object>> applications = Maps.newTreeMap()
-
         appsToProcess.each { appName, doc ->
             applications.put(appName, doc)
+        }
+
+        applications = applications.sort { a, b ->
+            a.key.compareToIgnoreCase b.key
         }
 
         properties.put("applications", applications)
@@ -109,8 +112,6 @@ class CreateDoc extends CreateDocumentationCliParameters {
 
             }
         }
-
-
 
         if (getOutputFolder()) {
 
