@@ -1,9 +1,7 @@
 package nz.org.nesi.appmanage
-
 import com.google.common.collect.Maps
 import grisu.frontend.control.login.LoginManager
 import grisu.jcommons.interfaces.GrinformationManagerDozer
-import grisu.jcommons.view.html.VelocityUtils
 import nz.org.nesi.appmanage.exceptions.AppFileException
 import nz.org.nesi.appmanage.model.Documentation
 import org.apache.commons.io.FileUtils
@@ -14,24 +12,24 @@ import org.apache.commons.io.FileUtils
  * Date: 6/06/13
  * Time: 10:53 AM
  */
-class CreateDoc extends CreateDocumentationCliParameters {
+class CreateStubs extends nz.org.nesi.appmanage.CreateStubsCliParameters {
 
 
     GrinformationManagerDozer gm = new GrinformationManagerDozer("git://github.com/nesi/nesi-grid-info.git/nesi/nesi.groovy")
 
     public static void main(String[] args) {
-        createDoc()
+        createStubs()
 
         System.exit(0)
     }
 
     def appsToProcess = [:]
 
-    public CreateDoc() {
+    public CreateStubs() {
 
     }
 
-    public static void createDoc() {
+    public static void createStub() {
 
         def args = ["-v", "-a",
                 "/home/markus/src/config/applications", "create-doc", "--applications",
@@ -46,7 +44,7 @@ class CreateDoc extends CreateDocumentationCliParameters {
         ExportModule expParams = new ExportModule();
         ImportModule impParams = new ImportModule();
         CreateDocumentationCliParameters createDocParams = new CreateDoc();
-
+        CreateStubsCliParameters createStubsParams = new CreateStubs();
         // create the client
         AppManage client = null;
         try {
@@ -61,12 +59,10 @@ class CreateDoc extends CreateDocumentationCliParameters {
     }
 
     public void validate() {
-        if (!new File(getOutputFolder()).exists()) {
-            new File(getOutputFolder()).mkdirs()
-        }
+
     }
 
-    public String createPageString() {
+    public List<File> createStubs() {
 
 
         def properties = [:]
@@ -88,26 +84,18 @@ class CreateDoc extends CreateDocumentationCliParameters {
             it = it.toLowerCase().trim()
         }
 
-
+        def createdFiles = []
         Map<String, Map<String, Object>> applications = Maps.newTreeMap()
         appsToProcess.each { appName, doc ->
             if ( ! ignore.contains(appName) ) {
                 applications.put(appName, doc)
-                if ( isCreateStub() ) {
-                    doc.createMssingFiles()
+                if ( isCreateDoc() ) {
+                    createdFiles.addAll(doc.createMissingFiles())
                 }
             }
         }
 
-        applications = applications.sort { a, b ->
-            a.key.compareToIgnoreCase b.key
-        }
-
-        properties.put("applications", applications)
-
-        String content = VelocityUtils.render((String)getSummaryTemplate(), properties)
-
-        return content
+        return createdFiles
 
     }
 
@@ -136,29 +124,9 @@ class CreateDoc extends CreateDocumentationCliParameters {
             }
         }
 
-        if (getOutputFolder()) {
+        String result = createStubs().join(", ")
 
-            for ( String app : appsToProcess.keySet() ) {
-                Documentation doc = appsToProcess.get(app)
-                String content = doc.getDocPageContent()
-                File mdFile = new File(getOutputFolder(), Documentation.APP_SUBFOLDER+File.separator+doc.getApplicationName()+".md")
-                FileUtils.deleteQuietly(mdFile)
-                FileUtils.write(mdFile, content)
-                doc.getProperties().put("appSubPage", doc.getApplicationName())
-            }
-
-            def homepage = createPageString()
-
-            println homepage
-
-            File main = new File(getOutputFolder(), Documentation.SUMMARY_FILE_NAME)
-            FileUtils.deleteQuietly(main)
-            FileUtils.write(main, homepage)
-
-        } else {
-            def homepage = createPageString()
-            println homepage
-        }
+        println result
     }
 
 

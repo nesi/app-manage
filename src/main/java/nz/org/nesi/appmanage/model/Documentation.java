@@ -3,6 +3,7 @@ package nz.org.nesi.appmanage.model;
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Maps;
 import grisu.jcommons.interfaces.GrinformationManagerDozer;
+import grisu.jcommons.utils.PackageFileHelper;
 import grisu.jcommons.view.html.VelocityUtils;
 import grisu.model.info.dto.Application;
 import grisu.model.info.dto.Queue;
@@ -53,11 +54,11 @@ public class Documentation {
 
     public Documentation(File appFolder, File appRoot) {
         if (appRoot == null || !appRoot.exists() || !appRoot.isDirectory()) {
-            throw new AppFileException("Application root '"+appRoot.getAbsolutePath()+"' not valid");
+            throw new AppFileException("Application root '" + appRoot.getAbsolutePath() + "' not valid");
         }
         if (appFolder == null || !appFolder.isDirectory() || appFolder.getName().startsWith(".")
-                || "scripts".equals(appFolder.getName())|| "logs".equals(appFolder.getName())) {
-            throw new AppFileException("Application folder '"+appFolder.getAbsolutePath()+"' not valid");
+                || "scripts".equals(appFolder.getName()) || "logs".equals(appFolder.getName())) {
+            throw new AppFileException("Application folder '" + appFolder.getAbsolutePath() + "' not valid");
         }
         this.appRoot = appRoot;
         this.appFolder = appFolder;
@@ -71,35 +72,35 @@ public class Documentation {
             Properties props = new Properties();
             try {
                 props.load(new FileInputStream(propsFile));
-                for ( String key : props.stringPropertyNames() ) {
-                properties.put(key, props.get(key));
-            }
+                for (String key : props.stringPropertyNames()) {
+                    properties.put(key, props.get(key));
+                }
             } catch (Exception e) {
-                throw new AppFileException("Can't load application properties from '"+propsFile.getAbsolutePath()+"'", e);
+                throw new AppFileException("Can't load application properties from '" + propsFile.getAbsolutePath() + "'", e);
             }
-            for ( String key : props.stringPropertyNames() ) {
+            for (String key : props.stringPropertyNames()) {
                 properties.put(key, props.get(key));
             }
 
         }
 
         File usageFile = new File(docRoot, USAGE_FILE_NAME);
-        if ( usageFile.exists() ) {
+        if (usageFile.exists()) {
             try {
                 properties.put("usage", FileUtils.readFileToString(usageFile));
             } catch (IOException e) {
-                throw new AppFileException("Can't read file "+usageFile.getAbsolutePath());
+                throw new AppFileException("Can't read file " + usageFile.getAbsolutePath());
             }
         } else {
             properties.put("usage", null);
         }
 
         File descFile = new File(docRoot, DESCRIPTION_FILE_NAME);
-        if ( descFile.exists() ) {
+        if (descFile.exists()) {
             try {
                 properties.put("description", FileUtils.readFileToString(descFile));
             } catch (IOException e) {
-                throw new AppFileException("Can't read file "+descFile.getAbsolutePath());
+                throw new AppFileException("Can't read file " + descFile.getAbsolutePath());
             }
         } else {
             properties.put("description", null);
@@ -110,14 +111,14 @@ public class Documentation {
         Queue q = gm.getQueue("pan:gram.uoa.nesi.org.nz");
         List<Version> versions = gm.getVersionsOfApplicationOnSubmissionLocation(appName, q.toString());
         List<String> v = Lists.newLinkedList();
-        for ( Version ver : versions ) {
+        for (Version ver : versions) {
             if (!Version.ANY_VERSION.equals(ver))
                 v.add(ver.getVersion());
         }
         properties.put("versions", v);
 
         jobs = new Jobs(appFolder, appRoot);
-        if ( jobs.getJobs().size() > 0 ) {
+        if (jobs.getJobs().size() > 0) {
             properties.put("jobs", jobs);
         } else {
             properties.put("jobs", null);
@@ -152,7 +153,7 @@ public class Documentation {
     public File getDocFile(String relativeFilename) {
         File temp = new File(docRoot, relativeFilename);
 
-        if ( temp.exists() ) {
+        if (temp.exists()) {
             return temp;
         } else {
             return null;
@@ -172,6 +173,52 @@ public class Documentation {
     }
 
     public Jobs getJobs() {
-      return jobs;
+        return jobs;
+    }
+
+    public List<File> createMissingFiles() throws IOException {
+
+        File temp = getDocumentationFolder();
+
+        List<File> created = Lists.newArrayList();
+
+        if (!temp.exists()) {
+            temp.mkdirs();
+            created.add(temp);
+            if (!temp.exists() && !temp.isDirectory()) {
+                throw new IOException("Could not create application documentation folder: " + temp.getAbsolutePath());
+            }
+        }
+
+        temp = new File(getDocumentationFolder(), APP_PROPERTIES_NAME);
+        if ( ! temp.exists() ) {
+            File resourceFile = PackageFileHelper.getFile(APP_PROPERTIES_NAME);
+            FileUtils.copyFile(resourceFile, temp);
+            created.add(temp);
+            if ( ! temp.exists() ) {
+                throw new IOException("Could not create application properties stub file: " + temp.getAbsolutePath());
+            }
+        }
+
+        temp = new File(getDocumentationFolder(), DESCRIPTION_FILE_NAME);
+        if ( ! temp.exists() ) {
+            File resourceFile = PackageFileHelper.getFile(DESCRIPTION_FILE_NAME);
+            FileUtils.copyFile(resourceFile, temp);
+            created.add(temp);
+            if ( ! temp.exists() ) {
+                throw new IOException("Could not create application description stub file: " + temp.getAbsolutePath());
+            }
+        }
+
+        temp = new File(getDocumentationFolder(), USAGE_FILE_NAME);
+        if ( ! temp.exists() ) {
+            File resourceFile = PackageFileHelper.getFile(USAGE_FILE_NAME);
+            FileUtils.copyFile(resourceFile, temp);
+            created.add(temp);
+            if ( ! temp.exists() ) {
+                throw new IOException("Could not create application usage stub file: " + temp.getAbsolutePath());
+            }
+        }
+        return created;
     }
 }

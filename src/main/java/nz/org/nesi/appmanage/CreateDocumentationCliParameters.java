@@ -22,6 +22,9 @@ abstract class CreateDocumentationCliParameters extends AppManageModule {
     @Parameter(names = {"--ignore"}, description = "Blacklist (file or comma-separated list of strings) for applications to not include")
     private String ignore;
 
+    @Parameter(names = {"--create-doc"}, description = "Create documentation stub for applications with no documentation")
+    private boolean createDocumentationStub = false;
+
 
 	public String getOutputFolder() {
 		return outputFolder;
@@ -35,7 +38,7 @@ abstract class CreateDocumentationCliParameters extends AppManageModule {
 
     public String getIgnore() { return ignore; }
 
-
+    public boolean isCreateStub() { return createDocumentationStub; }
 
 
 }
