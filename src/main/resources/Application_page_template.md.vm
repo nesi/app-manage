@@ -23,6 +23,9 @@ $description
 #elseif($short_description)
 
 $short_description
+#else
+
+There is no documentation for this application provided yet. Please contact eresearch@nesi.org.nz.
 #end
 
 
