@@ -19,6 +19,10 @@ abstract class CreateDocumentationCliParameters extends AppManageModule {
     @Parameter(names = {"--application-template"}, description = "the velocity template to create the application page (optional)")
     private String applicationPageTemplate = Documentation.APPLICATION_PAGE_TEMPLATE_FILE_NAME;
 
+    @Parameter(names = {"--ignore"}, description = "Blacklist (file or comma-separated list of strings) for applications to not include")
+    private String ignore;
+
+
 	public String getOutputFolder() {
 		return outputFolder;
 	}
@@ -28,6 +32,8 @@ abstract class CreateDocumentationCliParameters extends AppManageModule {
     }
 
     public String getSummaryTemplate() { return summaryTemplate; }
+
+    public String getIgnore() { return ignore; }
 
 
 

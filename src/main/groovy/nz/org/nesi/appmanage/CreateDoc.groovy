@@ -71,9 +71,27 @@ class CreateDoc extends CreateDocumentationCliParameters {
 
         def properties = [:]
 
+        def ignore = getIgnore()
+
+        if ( ignore ) {
+            def temp = new File(ignore)
+            if ( temp.exists() ) {
+                ignore = FileUtils.readLines(temp)
+            } else {
+                ignore = ignore.split(",")
+            }
+        }
+
+        ignore.collect() { it ->
+            it = it.toLowerCase().trim()
+        }
+
+
         Map<String, Map<String, Object>> applications = Maps.newTreeMap()
         appsToProcess.each { appName, doc ->
-            applications.put(appName, doc)
+            if ( ! ignore.contains(appName) ) {
+                applications.put(appName, doc)
+            }
         }
 
         applications = applications.sort { a, b ->
