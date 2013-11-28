@@ -10,7 +10,7 @@ $H$H$H Details
  * **Homepage**: #if ($homepage) $homepage #else n/a#end
 
 #if ($versions.size() == 1)
- * **Version available**: $versions.get(0)
+ * **Version available**: $versions.iterator().next()
     #else
  * **Versions available**:
 #foreach ($version in $versions)

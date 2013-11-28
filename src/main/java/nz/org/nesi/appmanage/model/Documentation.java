@@ -3,12 +3,9 @@ package nz.org.nesi.appmanage.model;
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Maps;
 import com.google.common.collect.Sets;
-import grisu.jcommons.interfaces.GrinformationManagerDozer;
 import grisu.jcommons.utils.PackageFileHelper;
 import grisu.jcommons.view.html.VelocityUtils;
-import grisu.model.info.dto.Application;
-import grisu.model.info.dto.Queue;
-import grisu.model.info.dto.Version;
+import nz.org.nesi.appmanage.ExportModule;
 import nz.org.nesi.appmanage.Utils;
 import nz.org.nesi.appmanage.exceptions.AppFileException;
 import org.apache.commons.io.FileUtils;
@@ -18,10 +15,7 @@ import org.apache.commons.ssl.asn1.Strings;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Project: Applications
@@ -31,8 +25,6 @@ import java.util.Set;
  * Time: 8:25 AM
  */
 public class Documentation {
-
-    public final static GrinformationManagerDozer gm = new GrinformationManagerDozer("git://github.com/nesi/nesi-grid-info.git/nesi/nesi.groovy");
 
     public static final String README_FILE_NAME = "Readme.md";
     public static final String SUMMARY_TEMPLATE_FILE_NAME = "Summary_template.md";
@@ -57,6 +49,9 @@ public class Documentation {
     private final String docPageContent;
 
     private final Map<String, Object> properties = Maps.newLinkedHashMap();
+    private final Set<String> versions = Sets.newTreeSet();
+
+    private final Map<String, String> moduleContents = new TreeMap<String, String>();
 
     private final Jobs jobs;
 
@@ -123,16 +118,70 @@ public class Documentation {
             properties.put("description", null);
         }
 
-        List<Application> allapps = gm.getAllApplicationsOnGrid();
 
-        Queue q = gm.getQueue("pan:gram.uoa.nesi.org.nz");
-        List<Version> versions = gm.getVersionsOfApplicationOnSubmissionLocation(appName, q.toString());
-        List<String> v = Lists.newLinkedList();
-        for (Version ver : versions) {
-            if (!Version.ANY_VERSION.equals(ver))
-                v.add(ver.getVersion());
+        List<File> moduleFiles = ExportModule.getAllModuleFiles(getApplicationRoot(), this.appName+"/modules/Auckland/pan");
+
+        for (File file : moduleFiles ) {
+            //String app = Utils.getApplication(file, appRoot);
+            String version = file.getName();
+            versions.add(version);
+            try {
+                String moduleContent = FileUtils.readFileToString(file);
+                moduleContents.put(version, moduleContent);
+                Object short_desc = getProperty("short_description");
+                if ( short_desc == null ) {
+                    for ( String line : moduleContent.split("\n")) {
+                        if ( line.contains("module-whatis") ) {
+                            int i = line.indexOf("module-whatis");
+                            String temp = line.substring(i+13);
+                            temp = temp.replaceAll("\\{|\\}", "");
+                            temp = temp.trim();
+                            if ( temp.startsWith("\"")) {
+                                temp = temp.substring(1);
+                            }
+                            if ( temp.endsWith("\"")) {
+                                temp = temp.substring(0, temp.length()-1);
+                            }
+                            getProperties().put("short_description", temp);
+                        }
+                    }
+                }
+                Object homepage = getProperty("homepage");
+                if ( homepage == null ) {
+                    for ( String line : moduleContent.split("\n")) {
+                        if ( line.toLowerCase().contains("http") ) {
+                            int i = line.indexOf("http");
+                            int j = line.indexOf(" ", i);
+                            String temp = null;
+                            if ( j <= 0 ) {
+                                temp = line.substring(i);
+                            } else {
+                                temp = line.substring(i, j);
+                            }
+
+                            temp = temp.replaceAll("\\{|\\}", "");
+                            temp = temp.trim();
+                            getProperties().put("homepage", temp);
+                        }
+                    }
+                }
+
+            } catch (IOException e) {
+                moduleContents.put(version, "n/a");
+            }
         }
-        properties.put("versions", v);
+        properties.put("versions", versions);
+
+//        List<Application> allapps = gm.getAllApplicationsOnGrid();
+//
+//        Queue q = gm.getQueue("pan:gram.uoa.nesi.org.nz");
+//        List<Version> versions = gm.getVersionsOfApplicationOnSubmissionLocation(appName, q.toString());
+//        List<String> v = Lists.newLinkedList();
+//        for (Version ver : versions) {
+//            if (!Version.ANY_VERSION.equals(ver))
+//                v.add(ver.getVersion());
+//        }
+//        properties.put("versions", v);
 
         jobs = new Jobs(appFolder, appRoot);
         if (jobs.getJobs().size() > 0) {
@@ -145,6 +194,10 @@ public class Documentation {
 
     }
 
+    public Set<String> getVersions() {
+        return versions;
+    }
+
     public String createExampleJobPage(Job job) {
 
 
@@ -153,6 +206,10 @@ public class Documentation {
 
     public File getApplicationRoot() {
         return this.appRoot;
+    }
+
+    public Map<String, String> getModuleContents() {
+        return moduleContents;
     }
 
     public File getApplicationFolder() {
