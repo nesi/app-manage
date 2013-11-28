@@ -2,6 +2,7 @@ package nz.org.nesi.appmanage.model;
 
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Maps;
+import com.google.common.collect.Sets;
 import grisu.jcommons.interfaces.GrinformationManagerDozer;
 import grisu.jcommons.utils.PackageFileHelper;
 import grisu.jcommons.view.html.VelocityUtils;
@@ -11,6 +12,8 @@ import grisu.model.info.dto.Version;
 import nz.org.nesi.appmanage.Utils;
 import nz.org.nesi.appmanage.exceptions.AppFileException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.ssl.asn1.Strings;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Project: Applications
@@ -37,8 +41,12 @@ public class Documentation {
     public static final String APP_SUBFOLDER = "apps";
     public static final String DOC_FOLDER = "doc";
     public static final String USAGE_FILE_NAME = "Usage.md";
+    public static final String SCALABILITY_FILE_NAME = "Scalability.md";
     public static final String DESCRIPTION_FILE_NAME = "Description.md";
     public static final String APPLICATION_PAGE_TEMPLATE_FILE_NAME = "Application_page_template.md";
+    public static final String TAGS_PROPERTIES_KEY = "tags";
+
+    private final Set<String> tags = Sets.newTreeSet();
 
     private final File appRoot;
     private final File appFolder;
@@ -73,7 +81,17 @@ public class Documentation {
             try {
                 props.load(new FileInputStream(propsFile));
                 for (String key : props.stringPropertyNames()) {
-                    properties.put(key, props.get(key));
+                    if ( TAGS_PROPERTIES_KEY.equalsIgnoreCase(key) ) {
+                        String value = (String)props.get(key);
+                        if ( ! StringUtils.isBlank(value)) {
+                            for ( String token : Strings.split(value, ',') ) {
+                                tags.add(token.trim());
+                            }
+                            properties.put(TAGS_PROPERTIES_KEY, tags);
+                        }
+                    } else {
+                        properties.put(key, props.get(key));
+                    }
                 }
             } catch (Exception e) {
                 throw new AppFileException("Can't load application properties from '" + propsFile.getAbsolutePath() + "'", e);
@@ -85,23 +103,22 @@ public class Documentation {
         }
 
         File usageFile = new File(docRoot, USAGE_FILE_NAME);
-        if (usageFile.exists()) {
-            try {
-                properties.put("usage", FileUtils.readFileToString(usageFile));
-            } catch (IOException e) {
-                throw new AppFileException("Can't read file " + usageFile.getAbsolutePath());
-            }
+        if (usageFile.exists() && usageFile.length() > 0) {
+            properties.put("usage", usageFile.getAbsolutePath());
         } else {
             properties.put("usage", null);
         }
 
+        File scalabilityFile = new File(docRoot, SCALABILITY_FILE_NAME);
+        if (scalabilityFile.exists() && usageFile.length() > 0) {
+            properties.put("scalability", scalabilityFile.getAbsolutePath());
+        } else {
+            properties.put("scalability", null);
+        }
+
         File descFile = new File(docRoot, DESCRIPTION_FILE_NAME);
-        if (descFile.exists()) {
-            try {
-                properties.put("description", FileUtils.readFileToString(descFile));
-            } catch (IOException e) {
-                throw new AppFileException("Can't read file " + descFile.getAbsolutePath());
-            }
+        if (descFile.exists() && descFile.length() > 0) {
+            properties.put("description", descFile.getAbsolutePath());
         } else {
             properties.put("description", null);
         }
@@ -158,6 +175,14 @@ public class Documentation {
         } else {
             return null;
         }
+    }
+
+    public boolean hasTag(String tag) {
+        return tags.contains(tag);
+    }
+
+    public Set<String> getTags() {
+        return tags;
     }
 
     public Map<String, Object> getProperties() {

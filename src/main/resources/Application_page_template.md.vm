@@ -1,6 +1,8 @@
 #set( $H = '#' )
-#set( $URL = 'https://github.com/nesi/applications/tree/master/' )
-#set( $RAW_URL = 'https://github.com/nesi/applications/raw/master/' )
+#set( $URL = 'https://github.com/nesi/applications/tree/master' )
+#set( $RAW_URL = "https://raw.github.com/nesi/applications/master/${application}" )
+#set( $DOC_FILE = "${RAW_URL}/doc/files/" )
+
 #if( $versions.size() > 0 )
 
 $H$H$H Details
@@ -17,12 +19,12 @@ $H$H$H Details
 #if ($licensing) * **Licensing**: ${licensing}#end
 #end
 
-#if ($description)
+#if (${description})
 
-$description
-#elseif($short_description)
+#parse ( ${description} )
+#elseif(${short_description})
 
-$short_description
+${short_description}
 #else
 
 There is no documentation for this application provided yet. Please contact eresearch@nesi.org.nz.
@@ -33,16 +35,25 @@ There is no documentation for this application provided yet. Please contact eres
 
 $H$H$H Usage
 
-$usage
+#parse ( $usage )
 #end
+
+
+#if ($scalability)
+
+$H$H$H Scalability
+
+#parse ( $scalability )
+#end
+
 
 #if ($jobs.hasLlJobs())
 $H$H$H Example jobs
 
 #foreach ($job in $jobs.getLlJobs())
-$H$H$H$H Job: [$job.getJobBaseName()]($URL/$application/jobs/$job.getJobBaseName())
+$H$H$H$H Job: $job.getJobBaseName() ([repository link]($URL/$application/jobs/$job.getJobBaseName()))
 
-$H$H$H$H$H [Job description]($RAW_URL/$application/jobs/$job.getJobBaseName()/job.ll)
+$H$H$H$H$H Job description ([download]($RAW_URL/jobs/$job.getJobBaseName()/job.ll))
 
 ```
 $job.getLl()
@@ -53,7 +64,7 @@ $H$H$H$H$H Input file(s)
 
 #foreach ($file in $job.getInputFiles())
 #set ($fileName = $file.getName())
- * [$fileName]($RAW_URL/$application/jobs/$job.getJobBaseName()/files/$fileName)
+ * $fileName ([download]($RAW_URL/jobs/$job.getJobBaseName()/files/$fileName))
 #end
 
 #end

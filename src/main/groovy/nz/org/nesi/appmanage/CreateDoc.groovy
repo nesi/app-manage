@@ -92,6 +92,11 @@ class CreateDoc extends CreateDocumentationCliParameters {
         Map<String, Map<String, Object>> applications = Maps.newTreeMap()
         appsToProcess.each { appName, doc ->
             if ( ! ignore.contains(appName) ) {
+                Object versions = doc.getProperties().get("versions");
+                if ( versions == null || ! (versions instanceof List) || ! versions.size() == 0 ) {
+                    return;
+                }
+                if ( doc.getProperties().get("versions"))
                 applications.put(appName, doc)
                 if ( isCreateStub() ) {
                     doc.createMssingFiles()
