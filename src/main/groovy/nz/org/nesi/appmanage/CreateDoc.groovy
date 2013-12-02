@@ -1,8 +1,5 @@
 package nz.org.nesi.appmanage
-
 import com.google.common.collect.Maps
-import grisu.frontend.control.login.LoginManager
-import grisu.jcommons.interfaces.GrinformationManagerDozer
 import grisu.jcommons.view.html.VelocityUtils
 import nz.org.nesi.appmanage.exceptions.AppFileException
 import nz.org.nesi.appmanage.model.Documentation
@@ -16,47 +13,9 @@ import org.apache.commons.io.FileUtils
  */
 class CreateDoc extends CreateDocumentationCliParameters {
 
-
-    GrinformationManagerDozer gm = new GrinformationManagerDozer("git://github.com/nesi/nesi-grid-info.git/nesi/nesi.groovy")
-
-    public static void main(String[] args) {
-        createDoc()
-
-        System.exit(0)
-    }
-
     def appsToProcess = [:]
 
     public CreateDoc() {
-
-    }
-
-    public static void createDoc() {
-
-        def args = ["-v", "-a",
-                "/home/markus/src/config/applications", "create-doc", "--applications",
-                "Abaqus,Java", "--output-dir", "/home/markus/doc/applications.wiki"];
-
-        // basic housekeeping
-        LoginManager.initGrisuClient("create-doc-confluence");
-
-        // helps to parse commandline arguments, if you don't want to create
-        // your own parameter class, just use DefaultCliParameters
-        MainCliParameters params = new MainCliParameters();
-        ExportModule expParams = new ExportModule();
-        ImportModule impParams = new ImportModule();
-        CreateDocumentationCliParameters createDocParams = new CreateDoc();
-
-        // create the client
-        AppManage client = null;
-        try {
-            client = new AppManage(params, expParams, impParams, createDocParams, args as String[]);
-        } catch (Exception e) {
-            System.err.println("Could not start app-manage: "
-                    + e.getLocalizedMessage());
-            return;
-        }
-
 
     }
 

@@ -38,6 +38,13 @@ public class Documentation {
     public static final String APPLICATION_PAGE_TEMPLATE_FILE_NAME = "Application_page_template.md";
     public static final String TAGS_PROPERTIES_KEY = "tags";
 
+    public static final String SHORT_DESCRIPTION_KEY = "short_description";
+    public static final String HOMEPAGE_KEY = "homepage";
+    public static final String LOCATION_KEY = "location";
+    public static final String LICENSING_KEY = "licensing";
+
+    public static final String[] PROPERTIES = new String[]{HOMEPAGE_KEY, SHORT_DESCRIPTION_KEY, LOCATION_KEY, LICENSING_KEY};
+
     private final Set<String> tags = Sets.newTreeSet();
 
     private final File appRoot;
@@ -256,6 +263,43 @@ public class Documentation {
 
     public Jobs getJobs() {
         return jobs;
+    }
+
+    public void createAppPropertiesFile() throws IOException {
+
+        File temp = getDocumentationFolder();
+        List<File> created = Lists.newArrayList();
+
+        if (!temp.exists()) {
+            temp.mkdirs();
+            created.add(temp);
+            if (!temp.exists() && !temp.isDirectory()) {
+                throw new IOException("Could not create application documentation folder: " + temp.getAbsolutePath());
+            }
+        }
+
+        temp = new File(getDocumentationFolder(), APP_PROPERTIES_NAME);
+        if ( ! temp.exists() ) {
+            File resourceFile = PackageFileHelper.getFile(APP_PROPERTIES_NAME);
+            FileUtils.copyFile(resourceFile, temp);
+            created.add(temp);
+            if ( ! temp.exists() ) {
+                throw new IOException("Could not create application properties stub file: " + temp.getAbsolutePath());
+            }
+        }
+
+        Properties props = new Properties();
+        try {
+            props.load(new FileInputStream(propsFile));
+
+            for ( String key : PROPERTIES ) {
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public List<File> createMissingFiles() throws IOException {

@@ -1,6 +1,5 @@
 package nz.org.nesi.appmanage
 import com.google.common.collect.Maps
-import grisu.frontend.control.login.LoginManager
 import nz.org.nesi.appmanage.exceptions.AppFileException
 import nz.org.nesi.appmanage.model.Documentation
 import org.apache.commons.io.FileUtils
@@ -11,55 +10,21 @@ import org.apache.commons.io.FileUtils
  * Date: 6/06/13
  * Time: 10:53 AM
  */
-class CreateStubs extends nz.org.nesi.appmanage.CreateStubsCliParameters {
+class CheckDoc extends nz.org.nesi.appmanage.CheckDocsCliParameters {
 
-
-    public static void main(String[] args) {
-        createStubs()
-
-        System.exit(0)
-    }
 
     def appsToProcess = [:]
 
-    public CreateStubs() {
+    public CheckDoc() {
 
     }
 
-    public static void createStub() {
-
-        def args = ["-v", "-a",
-                "/home/markus/src/config/applications", "create-doc", "--applications",
-                "Abaqus,Java", "--output-dir", "/home/markus/doc/applications.wiki"];
-
-        // basic housekeeping
-        LoginManager.initGrisuClient("create-doc-confluence");
-
-        // helps to parse commandline arguments, if you don't want to create
-        // your own parameter class, just use DefaultCliParameters
-        MainCliParameters params = new MainCliParameters();
-        ExportModule expParams = new ExportModule();
-        ImportModule impParams = new ImportModule();
-        CreateDocumentationCliParameters createDocParams = new CreateDoc();
-        CreateStubsCliParameters createStubsParams = new CreateStubs();
-        // create the client
-        AppManage client = null;
-        try {
-            client = new AppManage(params, expParams, impParams, createDocParams, args as String[]);
-        } catch (Exception e) {
-            System.err.println("Could not start app-manage: "
-                    + e.getLocalizedMessage());
-            return;
-        }
-
-
-    }
 
     public void validate() {
 
     }
 
-    public List<File> createStubs() {
+    public List<File> checkDoc() {
 
 
         def properties = [:]
@@ -121,7 +86,7 @@ class CreateStubs extends nz.org.nesi.appmanage.CreateStubsCliParameters {
             }
         }
 
-        String result = createStubs().join(", ")
+        String result = checkDoc().join(", ")
 
         println result
     }
