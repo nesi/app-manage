@@ -54,6 +54,9 @@ class CreateDoc extends CreateDocumentationCliParameters {
                 if ( doc.getVersions().size() == 0 ) {
                     return;
                 }
+                if ( doc.getTags().contains(Documentation.IGNORE_APP_TAG) ) {
+                    return;
+                }
                 applications.put(appName, doc)
                 if ( isCreateStub() ) {
                     doc.createMssingFiles()

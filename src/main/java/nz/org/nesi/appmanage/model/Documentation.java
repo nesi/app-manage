@@ -43,6 +43,8 @@ public class Documentation {
     public static final String LOCATION_KEY = "location";
     public static final String LICENSING_KEY = "licensing";
 
+    public static final String IGNORE_APP_TAG = "ignore";
+
     public static final String[] PROPERTIES = new String[]{HOMEPAGE_KEY, SHORT_DESCRIPTION_KEY, LOCATION_KEY, LICENSING_KEY};
 
     private final Set<String> tags = Sets.newTreeSet();
