@@ -99,7 +99,7 @@ class CreateStubs extends nz.org.nesi.appmanage.CreateStubsCliParameters {
     public void execute() {
 
         if (getApplications()) {
-            for (String app : getApplications()) {
+            for (String app : getApplications().split(",")) {
                 def appFolder = Utils.getApplicationFolder(getAppRoot(), app)
                 try {
                     Documentation temp = new Documentation(appFolder, getAppRoot())

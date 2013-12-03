@@ -2,12 +2,10 @@ package nz.org.nesi.appmanage;
 
 import com.beust.jcommander.Parameter;
 
-import java.util.List;
-
 abstract class CreateStubsCliParameters extends AppManageModule {
 
     @Parameter(names = {"--applications"}, description = "only create documentation for the specified application(s) (comma-separated list)")
-    private List<String> applications;
+    private String applications;
 
     @Parameter(names = {"--ignore"}, description = "Blacklist (file or comma-separated list of strings) for applications to not include")
     private String ignore;
@@ -17,7 +15,7 @@ abstract class CreateStubsCliParameters extends AppManageModule {
 
 
 
-    public List<String> getApplications() {
+    public String getApplications() {
         return applications;
     }
 
