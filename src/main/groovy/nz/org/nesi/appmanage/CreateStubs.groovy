@@ -14,11 +14,6 @@ import org.apache.commons.io.FileUtils
 class CreateStubs extends nz.org.nesi.appmanage.CreateStubsCliParameters {
 
 
-    public static void main(String[] args) {
-        createStubs()
-
-        System.exit(0)
-    }
 
     def appsToProcess = [:]
 
