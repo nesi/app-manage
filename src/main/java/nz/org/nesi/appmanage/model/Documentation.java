@@ -64,7 +64,20 @@ public class Documentation {
 
     private final Jobs jobs;
 
+    private final String template;
+
     public Documentation(File appFolder, File appRoot) {
+        this(appFolder, appRoot, null);
+    }
+
+    public Documentation(File appFolder, File appRoot, String templateFile) {
+
+        if (StringUtils.isNotBlank(templateFile)) {
+            template = templateFile;
+        } else {
+            template = APPLICATION_PAGE_TEMPLATE_FILE_NAME;
+        }
+
         if (appRoot == null || !appRoot.exists() || !appRoot.isDirectory()) {
             throw new AppFileException("Application root '" + appRoot.getAbsolutePath() + "' not valid");
         }
@@ -85,10 +98,10 @@ public class Documentation {
             try {
                 props.load(new FileInputStream(propsFile));
                 for (String key : props.stringPropertyNames()) {
-                    if ( TAGS_PROPERTIES_KEY.equalsIgnoreCase(key) ) {
-                        String value = (String)props.get(key);
-                        if ( ! StringUtils.isBlank(value)) {
-                            for ( String token : Strings.split(value, ',') ) {
+                    if (TAGS_PROPERTIES_KEY.equalsIgnoreCase(key)) {
+                        String value = (String) props.get(key);
+                        if (!StringUtils.isBlank(value)) {
+                            for (String token : Strings.split(value, ',')) {
                                 tags.add(token.trim());
                             }
                             properties.put(TAGS_PROPERTIES_KEY, tags);
@@ -106,31 +119,44 @@ public class Documentation {
 
         }
 
-        File usageFile = new File(docRoot, USAGE_FILE_NAME);
-        if (usageFile.exists() && usageFile.length() > 0) {
-            properties.put("usage", usageFile.getAbsolutePath());
-        } else {
-            properties.put("usage", null);
+        if (docRoot != null && docRoot.isDirectory()) {
+            for (File file : docRoot.listFiles()) {
+                if (file.exists() && file.isFile() && file.length() > 0) {
+                    String filename = file.getName();
+                    int i = filename.indexOf(".");
+                    if ( i > 0 ) {
+                        filename = filename.substring(0, i);
+                    }
+                    properties.put(filename.toLowerCase(), file.getAbsolutePath());
+                }
+            }
         }
 
-        File scalabilityFile = new File(docRoot, SCALABILITY_FILE_NAME);
-        if (scalabilityFile.exists() && usageFile.length() > 0) {
-            properties.put("scalability", scalabilityFile.getAbsolutePath());
-        } else {
-            properties.put("scalability", null);
-        }
+//        File usageFile = new File(docRoot, USAGE_FILE_NAME);
+//        if (usageFile.exists() && usageFile.length() > 0) {
+//            properties.put("usage", usageFile.getAbsolutePath());
+//        } else {
+//            properties.put("usage", null);
+//        }
+//
+//        File scalabilityFile = new File(docRoot, SCALABILITY_FILE_NAME);
+//        if (scalabilityFile.exists() && usageFile.length() > 0) {
+//            properties.put("scalability", scalabilityFile.getAbsolutePath());
+//        } else {
+//            properties.put("scalability", null);
+//        }
+//
+//        File descFile = new File(docRoot, DESCRIPTION_FILE_NAME);
+//        if (descFile.exists() && descFile.length() > 0) {
+//            properties.put("description", descFile.getAbsolutePath());
+//        } else {
+//            properties.put("description", null);
+//        }
 
-        File descFile = new File(docRoot, DESCRIPTION_FILE_NAME);
-        if (descFile.exists() && descFile.length() > 0) {
-            properties.put("description", descFile.getAbsolutePath());
-        } else {
-            properties.put("description", null);
-        }
 
+        List<File> moduleFiles = ExportModule.getAllModuleFiles(getApplicationRoot(), this.appName + "/modules/Auckland/pan");
 
-        List<File> moduleFiles = ExportModule.getAllModuleFiles(getApplicationRoot(), this.appName+"/modules/Auckland/pan");
-
-        for (File file : moduleFiles ) {
+        for (File file : moduleFiles) {
             //String app = Utils.getApplication(file, appRoot);
             String version = file.getName();
             versions.add(version);
@@ -138,31 +164,31 @@ public class Documentation {
                 String moduleContent = FileUtils.readFileToString(file);
                 moduleContents.put(version, moduleContent);
                 Object short_desc = getProperty("short_description");
-                if ( short_desc == null ) {
-                    for ( String line : moduleContent.split("\n")) {
-                        if ( line.contains("module-whatis") ) {
+                if (short_desc == null) {
+                    for (String line : moduleContent.split("\n")) {
+                        if (line.contains("module-whatis")) {
                             int i = line.indexOf("module-whatis");
-                            String temp = line.substring(i+13);
+                            String temp = line.substring(i + 13);
                             temp = temp.replaceAll("\\{|\\}", "");
                             temp = temp.trim();
-                            if ( temp.startsWith("\"")) {
+                            if (temp.startsWith("\"")) {
                                 temp = temp.substring(1);
                             }
-                            if ( temp.endsWith("\"")) {
-                                temp = temp.substring(0, temp.length()-1);
+                            if (temp.endsWith("\"")) {
+                                temp = temp.substring(0, temp.length() - 1);
                             }
                             getProperties().put("short_description", temp);
                         }
                     }
                 }
                 Object homepage = getProperty("homepage");
-                if ( homepage == null ) {
-                    for ( String line : moduleContent.split("\n")) {
-                        if ( line.toLowerCase().contains("http") ) {
+                if (homepage == null) {
+                    for (String line : moduleContent.split("\n")) {
+                        if (line.toLowerCase().contains("http")) {
                             int i = line.indexOf("http");
                             int j = line.indexOf(" ", i);
                             String temp = null;
-                            if ( j <= 0 ) {
+                            if (j <= 0) {
                                 temp = line.substring(i);
                             } else {
                                 temp = line.substring(i, j);
@@ -199,7 +225,12 @@ public class Documentation {
             properties.put("jobs", null);
         }
 
-        docPageContent = VelocityUtils.render(APPLICATION_PAGE_TEMPLATE_FILE_NAME, properties);
+        Set<File> additionalTemplatePaths = Sets.newLinkedHashSet();
+        if (this.docRoot.exists()) {
+            additionalTemplatePaths.add(this.docRoot);
+        }
+
+        docPageContent = VelocityUtils.render(template, additionalTemplatePaths, properties);
 
     }
 
@@ -281,11 +312,11 @@ public class Documentation {
         }
 
         temp = new File(getDocumentationFolder(), APP_PROPERTIES_NAME);
-        if ( ! temp.exists() ) {
+        if (!temp.exists()) {
             File resourceFile = PackageFileHelper.getFile(APP_PROPERTIES_NAME);
             FileUtils.copyFile(resourceFile, temp);
             created.add(temp);
-            if ( ! temp.exists() ) {
+            if (!temp.exists()) {
                 throw new IOException("Could not create application properties stub file: " + temp.getAbsolutePath());
             }
         }
@@ -294,7 +325,7 @@ public class Documentation {
         try {
             props.load(new FileInputStream(propsFile));
 
-            for ( String key : PROPERTIES ) {
+            for (String key : PROPERTIES) {
 
             }
 
@@ -319,31 +350,31 @@ public class Documentation {
         }
 
         temp = new File(getDocumentationFolder(), APP_PROPERTIES_NAME);
-        if ( ! temp.exists() ) {
+        if (!temp.exists()) {
             File resourceFile = PackageFileHelper.getFile(APP_PROPERTIES_NAME);
             FileUtils.copyFile(resourceFile, temp);
             created.add(temp);
-            if ( ! temp.exists() ) {
+            if (!temp.exists()) {
                 throw new IOException("Could not create application properties stub file: " + temp.getAbsolutePath());
             }
         }
 
         temp = new File(getDocumentationFolder(), DESCRIPTION_FILE_NAME);
-        if ( ! temp.exists() ) {
+        if (!temp.exists()) {
             File resourceFile = PackageFileHelper.getFile(DESCRIPTION_FILE_NAME);
             FileUtils.copyFile(resourceFile, temp);
             created.add(temp);
-            if ( ! temp.exists() ) {
+            if (!temp.exists()) {
                 throw new IOException("Could not create application description stub file: " + temp.getAbsolutePath());
             }
         }
 
         temp = new File(getDocumentationFolder(), USAGE_FILE_NAME);
-        if ( ! temp.exists() ) {
+        if (!temp.exists()) {
             File resourceFile = PackageFileHelper.getFile(USAGE_FILE_NAME);
             FileUtils.copyFile(resourceFile, temp);
             created.add(temp);
-            if ( ! temp.exists() ) {
+            if (!temp.exists()) {
                 throw new IOException("Could not create application usage stub file: " + temp.getAbsolutePath());
             }
         }
