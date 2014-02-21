@@ -1,0 +1,76 @@
+#set( $H = '#' )
+#set( $URL = 'https://github.com/nesi/applications/tree/master' )
+#set( $RAW_URL = "https://raw.github.com/nesi/applications/master/${application}" )
+#set( $DOC_FILE = "${RAW_URL}/doc/files/" )
+
+#if( $versions.size() > 0 )
+
+$H$H$H Details YIDFSDF
+
+ * **Homepage**: #if ($homepage) $homepage #else n/a#end
+
+#if ($versions.size() == 1)
+ * **Version available**: $versions.iterator().next()
+    #else
+ * **Versions available**:
+#foreach ($version in $versions)
+   * $version
+#end
+#if ($licensing) * **Licensing**: ${licensing}#end
+#end
+
+#if (${description})
+
+#parse ( ${description} )
+#elseif(${short_description})
+
+${short_description}
+#else
+
+There is no documentation for this application provided yet. Please contact eresearch@nesi.org.nz.
+#end
+
+
+#if ($usage)
+
+$H$H$H Usage
+
+#parse ( $usage )
+#end
+
+
+#if ($scalability)
+
+$H$H$H Scalability
+
+#parse ( $scalability )
+#end
+
+
+#if ($jobs.hasLlJobs())
+$H$H$H Example jobs
+
+#foreach ($job in $jobs.getLlJobs())
+$H$H$H$H Job: $job.getJobBaseName() ([repository link]($URL/$application/jobs/$job.getJobBaseName()))
+
+$H$H$H$H$H Job description ([download]($RAW_URL/jobs/$job.getJobBaseName()/job.ll))
+
+```
+$job.getLl()
+```
+
+#if($job.getInputFiles().size() > 0)
+$H$H$H$H$H Input file(s)
+
+#foreach ($file in $job.getInputFiles())
+#set ($fileName = $file.getName())
+ * $fileName ([download]($RAW_URL/jobs/$job.getJobBaseName()/files/$fileName))
+#end
+
+#end
+
+#end
+#end
+
+#end
+
