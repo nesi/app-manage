@@ -235,11 +235,7 @@ public class Documentation {
         return versions;
     }
 
-    public String createExampleJobPage(Job job) {
 
-
-        return null;
-    }
 
     public File getApplicationRoot() {
         return this.appRoot;

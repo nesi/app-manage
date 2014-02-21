@@ -10,3 +10,6 @@ create list
 Create app pages, then summary
 java -jar target/app-manage-binary.jar  -a /home/markus/src/config/applications create-doc --template /home/markus/src/Utils/app-manage/application.md.vm -o /home/markus/doc/test/apps
 
+java -jar target/app-manage-binary.jar  -a /home/markus/src/config/applications create-list --template /home/markus/src/Utils/app-manage/list_template.md.vm -o /home/markus/doc/test/list.md
+or
+java -jar target/app-manage-binary.jar  -a /home/markus/src/config/applications create-list -a /home/markus/src/config/applications create-list --template /home/markus/src/Utils/app-manage/list_template.md.vm --tags top_app,Programming
