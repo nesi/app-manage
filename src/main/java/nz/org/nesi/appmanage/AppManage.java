@@ -32,6 +32,7 @@ public class AppManage extends GrisuCliClient<MainCliParameters> {
         try {
             client = new AppManage(params, expParams, impParams, createDocParams, createStubsParams, args);
         } catch(Exception e) {
+            e.printStackTrace();
             System.err.println("Could not start app-manage: "
                     + e.getLocalizedMessage());
             System.exit(1);

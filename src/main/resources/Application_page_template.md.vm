@@ -5,53 +5,53 @@
 
 #if( $versions.size() > 0 )
 
-$H$H$H Details
+    $H$H$H Details
 
  * **Homepage**: #if ($homepage) $homepage #else n/a#end
 
-#if ($versions.size() == 1)
+    #if ($versions.size() == 1)
  * **Version available**: $versions.iterator().next()
     #else
  * **Versions available**:
 #foreach ($version in $versions)
    * $version
-#end
-#if ($licensing) * **Licensing**: ${licensing}#end
-#end
+    #end
+        #if ($licensing) * **Licensing**: ${licensing}#end
+    #end
 
-#if (${description})
+    #if (${Description_md})
 
-#parse ( ${description} )
-#elseif(${short_description})
+        #parse ( ${Description_md} )
+    #elseif(${short_description})
 
-${short_description}
-#else
+        ${short_description}
+    #else
 
 There is no documentation for this application provided yet. Please contact eresearch@nesi.org.nz.
 #end
 
 
-#if ($usage)
+    #if ($Usage_md)
 
-$H$H$H Usage
+        $H$H$H Usage
 
-#parse ( $usage )
-#end
-
-
-#if ($scalability)
-
-$H$H$H Scalability
-
-#parse ( $scalability )
-#end
+#parse ( $Usage_md )
+    #end
 
 
-#if ($jobs.hasLlJobs())
-$H$H$H Example jobs
+    #if ($Scalability_md)
+
+        $H$H$H Scalability
+
+#parse ( $Scalability_md )
+    #end
+
+
+    #if ($jobs.hasLlJobs())
+        $H$H$H Example jobs
 
 #foreach ($job in $jobs.getLlJobs())
-$H$H$H$H Job: $job.getJobBaseName() ([repository link]($URL/$application/jobs/$job.getJobBaseName()))
+        $H$H$H$H Job: $job.getJobBaseName() ([repository link]($URL/$application/jobs/$job.getJobBaseName()))
 
 $H$H$H$H$H Job description ([download]($RAW_URL/jobs/$job.getJobBaseName()/job.ll))
 
@@ -60,17 +60,16 @@ $job.getLl()
 ```
 
 #if($job.getInputFiles().size() > 0)
-$H$H$H$H$H Input file(s)
+            $H$H$H$H$H Input file(s)
 
 #foreach ($file in $job.getInputFiles())
-#set ($fileName = $file.getName())
+                #set ($fileName = $file.getName())
  * $fileName ([download]($RAW_URL/jobs/$job.getJobBaseName()/files/$fileName))
 #end
 
-#end
+        #end
+
+    #end
+    #end
 
 #end
-#end
-
-#end
-

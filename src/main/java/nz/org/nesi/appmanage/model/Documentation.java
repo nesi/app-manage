@@ -123,11 +123,8 @@ public class Documentation {
             for (File file : docRoot.listFiles()) {
                 if (file.exists() && file.isFile() && file.length() > 0) {
                     String filename = file.getName();
-                    int i = filename.indexOf(".");
-                    if ( i > 0 ) {
-                        filename = filename.substring(0, i);
-                    }
-                    properties.put(filename.toLowerCase(), file.getAbsolutePath());
+                    filename = filename.replace(".", "_");
+                    properties.put(filename, file.getAbsolutePath());
                 }
             }
         }

@@ -5,7 +5,7 @@
 
 #if( $versions.size() > 0 )
 
-$H$H$H Details YIDFSDF
+$H$H$H Details
 
  * **Homepage**: #if ($homepage) $homepage #else n/a#end
 
@@ -19,9 +19,9 @@ $H$H$H Details YIDFSDF
 #if ($licensing) * **Licensing**: ${licensing}#end
 #end
 
-#if (${description})
+#if (${Description_md})
 
-#parse ( ${description} )
+#parse ( ${Description_md} )
 #elseif(${short_description})
 
 ${short_description}
@@ -31,11 +31,11 @@ There is no documentation for this application provided yet. Please contact eres
 #end
 
 
-#if ($usage)
+#if ($Usage_md)
 
 $H$H$H Usage
 
-#parse ( $usage )
+#parse ( $Usage_md )
 #end
 
 

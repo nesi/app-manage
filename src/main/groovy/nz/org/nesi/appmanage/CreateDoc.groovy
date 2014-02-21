@@ -3,6 +3,7 @@ package nz.org.nesi.appmanage
 import nz.org.nesi.appmanage.exceptions.AppFileException
 import nz.org.nesi.appmanage.model.Documentation
 import org.apache.commons.io.FileUtils
+
 /**
  * Project: grisu
  *
@@ -19,7 +20,7 @@ class CreateDoc extends CreateDocumentationCliParameters {
     }
 
     public void validate() {
-        if (!new File(getOutputFolder()).exists()) {
+        if (getOutputFolder() != null && !new File(getOutputFolder()).exists()) {
             new File(getOutputFolder()).mkdirs()
         }
     }
@@ -49,30 +50,21 @@ class CreateDoc extends CreateDocumentationCliParameters {
             }
         }
 
-        if (getOutputFolder()) {
 
-            for ( String app : appsToProcess.keySet() ) {
-                Documentation doc = appsToProcess.get(app)
-                String content = doc.getDocPageContent()
-                File mdFile = new File(getOutputFolder(), doc.getApplicationName()+".md")
+        for (String app : appsToProcess.keySet()) {
+            Documentation doc = appsToProcess.get(app)
+            String content = doc.getDocPageContent()
+            if (getOutputFolder()) {
+                File mdFile = new File(getOutputFolder(), doc.getApplicationName() + ".md")
                 FileUtils.deleteQuietly(mdFile)
                 FileUtils.write(mdFile, content)
-                doc.getProperties().put("appSubPage", doc.getApplicationName())
+                //doc.getProperties().put("appSubPage", doc.getApplicationName())
+            } else {
+                System.out.println(content);
+                System.out.println("");
             }
 
-//            def homepage = createPageString()
-//
-//            println homepage
-//
-//            File main = new File(getOutputFolder(), Documentation.SUMMARY_FILE_NAME)
-//            FileUtils.deleteQuietly(main)
-//            FileUtils.write(main, homepage)
 
-        } else {
-            def homepage = createPageString()
-            println homepage
         }
     }
-
-
 }
