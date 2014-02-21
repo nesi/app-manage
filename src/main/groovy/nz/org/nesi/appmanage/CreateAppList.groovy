@@ -11,7 +11,7 @@ import org.apache.commons.io.FileUtils
  * Date: 6/06/13
  * Time: 10:53 AM
  */
-class CreateAppList extends CreateDocumentationCliParameters {
+class CreateAppList extends CreateAppListCliParameters {
 
     def appsToProcess = [:]
 
@@ -20,8 +20,8 @@ class CreateAppList extends CreateDocumentationCliParameters {
     }
 
     public void validate() {
-        if (!new File(getOutputFolder()).exists()) {
-            new File(getOutputFolder()).mkdirs()
+        if (getOutputFile() != null && !new File(getOutputFile()).exists()) {
+            new File(getOutputFile()).mkdirs()
         }
     }
 
@@ -58,9 +58,7 @@ class CreateAppList extends CreateDocumentationCliParameters {
                     return;
                 }
                 applications.put(appName, doc)
-                if ( isCreateStub() ) {
-                    doc.createMssingFiles()
-                }
+
             }
         }
 
@@ -78,12 +76,20 @@ class CreateAppList extends CreateDocumentationCliParameters {
 
     public void execute() {
 
+        List<String> tags = null;
+        if ( getTags() ) {
+            tags = getTags().split(",")
+        }
+
+
         if (getApplications()) {
             for (String app : getApplications()) {
                 def appFolder = Utils.getApplicationFolder(getAppRoot(), app)
                 try {
                     Documentation temp = new Documentation(appFolder, getAppRoot())
-                    appsToProcess.put(temp.getApplicationName(), temp)
+                    if ( ! tags || temp.getTags().intersect(tags) ) {
+                        appsToProcess.put(temp.getApplicationName(), temp)
+                    }
                 } catch (AppFileException afe) {
                     printMessage("Ignoring folder " + appFolder + ": " + afe.getLocalizedMessage(), true)
                 }
@@ -93,7 +99,9 @@ class CreateAppList extends CreateDocumentationCliParameters {
             getAppRoot().listFiles().sort { it.name }.each { appFolder ->
                 try {
                     Documentation temp = new Documentation(appFolder, getAppRoot())
-                    appsToProcess.put(temp.getApplicationName(), temp)
+                    if ( ! tags || temp.getTags().intersect(tags) ) {
+                        appsToProcess.put(temp.getApplicationName(), temp)
+                    }
                 } catch (AppFileException afe) {
                     printMessage("Ignoring folder " + appFolder + ": " + afe.getLocalizedMessage(), true)
                 }
@@ -101,29 +109,21 @@ class CreateAppList extends CreateDocumentationCliParameters {
             }
         }
 
-        if (getOutputFolder()) {
+            //for ( String app : appsToProcess.keySet() ) {
+            //    Documentation doc = appsToProcess.get(app)
+//                String content = doc.getDocPageContent()
+//                doc.getProperties().put("appSubPage", doc.getApplicationName())
+//            }
 
-            for ( String app : appsToProcess.keySet() ) {
-                Documentation doc = appsToProcess.get(app)
-                String content = doc.getDocPageContent()
-                File mdFile = new File(getOutputFolder(), doc.getApplicationName()+".md")
-                FileUtils.deleteQuietly(mdFile)
-                FileUtils.write(mdFile, content)
-                doc.getProperties().put("appSubPage", doc.getApplicationName())
-            }
+        def page = createPageString()
 
-//            def homepage = createPageString()
-//
-//            println homepage
-//
-//            File main = new File(getOutputFolder(), Documentation.SUMMARY_FILE_NAME)
-//            FileUtils.deleteQuietly(main)
-//            FileUtils.write(main, homepage)
-
+        if ( getOutputFile() ) {
+            FileUtils.deleteQuietly(new File(getOutputFile()))
+            FileUtils.write(new File(getOutputFile()), page)
         } else {
-            def homepage = createPageString()
-            println homepage
+            println page
         }
+
     }
 
 

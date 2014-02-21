@@ -1,0 +1,31 @@
+#set( $H = '#' )
+
+$H$H Top applications
+
+#foreach ($app in $applications.keySet())
+#set( $doc = $applications.get($app) )
+#set( $appSubPage = $doc.getProperty("appSubPage"))
+#if( $doc.hasTag('top_app'))
+#set ($application = $doc.getApplicationName())
+* #if($appSubPage)[$application](wiki/$appSubPage)#else$application#end
+
+#end
+#end
+
+
+$H$H All applications (alphabetically)
+
+#set ($AZ = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"])
+#foreach ($char in $AZ)
+
+$H$H$H $char.toUpperCase()
+
+#foreach ($app in $applications.keySet())
+#set( $doc = $applications.get($app) )
+#set ($application = $doc.getApplicationName())
+#if ($application.toLowerCase().startsWith($char))
+* [$application](wiki/${application}.md)
+
+#end
+#end
+#end
