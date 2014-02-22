@@ -10,7 +10,7 @@ About this template:
    for information on how to use it.
 
 Note:
-   If you want a hash (#) to be rendered, it's easiest to asign it to a value ( #set( $H = '#' ) ).
+   If you want a hash (#) to be rendered, it's easiest to asign it to a variable ( #set( $H = '#' ) ).
    This is because hash is used as a marker character within the velocity template engine
 
 Available variables:
