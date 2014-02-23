@@ -24,12 +24,16 @@ public class AppManage extends GrisuCliClient<MainCliParameters> {
         MainCliParameters params = new MainCliParameters();
         ExportModule expParams = new ExportModule();
         ImportModule impParams = new ImportModule();
+        CreateDocumentationCliParameters createDocParams = new CreateDoc();
+        CreateStubsCliParameters createStubsParams = new CreateStubs();
+        CreateAppListCliParameters createListParams = new CreateAppList();
 
         // create the client
         AppManage client = null;
         try {
-            client = new AppManage(params, expParams, impParams, args);
+            client = new AppManage(params, expParams, impParams, createDocParams, createStubsParams, createListParams, args);
         } catch(Exception e) {
+            e.printStackTrace();
             System.err.println("Could not start app-manage: "
                     + e.getLocalizedMessage());
             System.exit(1);
@@ -47,26 +51,47 @@ public class AppManage extends GrisuCliClient<MainCliParameters> {
     final MainCliParameters mainParams;
     final ExportModule exportModulesCliParameters;
     final ImportModulesCliParameters importModulesCliParameters;
+    final CreateDocumentationCliParameters createDocumentationCliParameters;
+    final CreateStubsCliParameters createStubsCliParameters;
+    final CreateAppListCliParameters createListParameters;
 
     private final AppManageModule commandClass;
 
-    public AppManage(MainCliParameters params, ExportModule expParams, ImportModule impParams, String[] args) throws Exception {
+    public AppManage(MainCliParameters params, ExportModule expParams, ImportModule impParams, CreateDocumentationCliParameters createDocParams, CreateStubsCliParameters createStubsParams, CreateAppListCliParameters createListParams, String[] args) throws Exception {
         super(params, args);
         this.mainParams = params;
         this.exportModulesCliParameters = expParams;
         this.importModulesCliParameters = impParams;
+        this.createDocumentationCliParameters = createDocParams;
+        this.createStubsCliParameters = createStubsParams;
+        this.createListParameters = createListParams;
         jc = new JCommander(params);
         jc.setProgramName("app-manage");
         jc.addCommand("export-modules", expParams);
         jc.addCommand("import-modules", impParams);
+        jc.addCommand("create-doc", createDocParams);
+        jc.addCommand("create-stubs", createStubsParams);
+        jc.addCommand("create-list", createListParams);
 
-        jc.parse(args);
+        try {
+            jc.parse(args);
+        } catch (Exception e) {
+            System.err.println(e.getLocalizedMessage());
+            jc.usage();
+            System.exit(1);
+        }
         String command = jc.getParsedCommand();
 
         if ( "export-modules".equals(command) ) {
             commandClass = exportModulesCliParameters;
         }  else if ( "import-modules".equals(command) ) {
             commandClass = importModulesCliParameters;
+        } else if ( "create-doc".equals(command) ) {
+            commandClass = createDocumentationCliParameters;
+        } else if ( "create-stubs".equals(command) ) {
+            commandClass = createStubsCliParameters;
+        } else if ( "create-list".equals(command) ) {
+            commandClass = createListParams;
         } else {
             commandClass = null;
             System.err.println( "No command '"+command+"'" );
@@ -84,6 +109,9 @@ public class AppManage extends GrisuCliClient<MainCliParameters> {
 
         this.exportModulesCliParameters.setClient(this);
         this.importModulesCliParameters.setClient(this);
+        this.createDocumentationCliParameters.setClient(this);
+        this.createStubsCliParameters.setClient(this);
+        this.createListParameters.setClient(this);
 
         commandClass.validate();
         commandClass.execute();

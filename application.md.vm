@@ -1,0 +1,137 @@
+#*
+About this template:
+
+   This template will create a documentation page for an application, drawing information from different sources that
+   are stored in a structured application repository (for example: https://github.com/nesi/applications). You can use
+   every target format you want (html, xml, markdown, ..), by default we use markdown to be used in the Github wiki.
+
+   It will be used by the Velocity template engine (http://velocity.apache.org/ - version 1.7) and therefor is written
+   in the Velocity template language (VTL). Check out http://velocity.apache.org/engine/devel/vtl-reference-guide.html
+   for information on how to use it.
+
+   All the variables are Java objects, so you can call methods on them (for example: getName() on a File object).
+
+
+Note:
+   If you want a hash (#) to be rendered, it's easiest to asign it to a variable ( #set( $H = '#' ) ).
+   This is because hash is used as a marker character within the velocity template engine
+
+Available variables:
+
+   * application properties : app.properties key => ${<app.properties key>}
+     - the properties specified in the app.properties file (e.g. https://github.com/nesi/applications/blob/master/Java/doc/app.properties)
+     - use key directly as variable (for example: the value of 'homepage' can be accessed via: ${homepage})
+     - Default keys:
+            * homepage
+            * tags (comma seperated list)
+            * short_description
+            * licensing
+            * location
+     - Default tags:
+            * top_app
+   * versions : ${versions}
+     - collection of all versions that are available for this application
+   * files in doc directory : filename.ext => ${filename_ext}
+     - dots ('.') in filenames are replaced with underscores ('_') because of restrictions of which characters can be used for variables
+     - can be used to parse and include external files. The following checks whether a file with the name 'Usage.md'
+       exists in the 'doc' directory of an application. If it does, it includes it's content in this position:
+
+          #if ($Usage_md)
+              #parse ( $Usage_md )
+          #end
+   * jobs : ${jobs}
+     - a collection of all example jobs in the 'jobs' subdirectory (e.g. https://github.com/nesi/applications/tree/master/Java/jobs)
+     - methods that can be called on that object:
+            * getJobsFolder() : reference to the 'jobs' folder in the file system
+            * getJobs() : all jobs (Grisu & LL job descriptions)
+            * getLlJobs() : all jobs with a LL job description
+            * getGrisuJobs() : all jobs with a Grisu job description
+            * hasLlJobs() : whether this application has any jobs with a LL job description
+            * hasGrisuJobs() : whether this application has any jobs with a Grisu job description
+     - methods that can be called on the 'job' object you get when iterating through the getJobs() method:
+            * getJobFolder() : the path to the folder (as Java File object)
+            * getJobBaseName() : the name of this job (aka name of the folder that contains the job)
+            * getGrisuJobDescription() : the path to the Grisu job description for this job (as a Java File object)
+            * getLoadLevelerJobDescription() : the path to the LL job description for this job (as a Java File object)
+            * getGrisu() : the Grisu job description as a String
+            * getLl() : the LL job description as a String
+            * getInputFiles() : a collection of the paths to all the input files for this job
+
+*#
+
+#set( $H = '#' )
+#set( $URL = 'https://github.com/nesi/applications/tree/master' )
+#set( $RAW_URL = "https://raw.github.com/nesi/applications/master/${application}" )
+#set( $DOC_FILE = "${RAW_URL}/doc/files/" )
+
+#if( $versions.size() > 0 )
+
+$H$H$H Details
+
+ * **Homepage**: #if ($homepage) $homepage #else n/a#end
+
+#if ($versions.size() == 1)
+ * **Version available**: $versions.iterator().next()
+    #else
+ * **Versions available**:
+#foreach ($version in $versions)
+   * $version
+#end
+#if ($licensing) * **Licensing**: ${licensing}#end
+#end
+
+#if (${Description_md})
+
+#parse ( ${Description_md} )
+#elseif(${short_description})
+
+${short_description}
+#else
+
+There is no documentation for this application provided yet. Please contact eresearch@nesi.org.nz.
+#end
+
+
+#if ($Usage_md)
+
+$H$H$H Usage
+
+#parse ( $Usage_md )
+#end
+
+
+#if ($scalability)
+
+$H$H$H Scalability
+
+#parse ( $scalability )
+#end
+
+
+#if ($jobs.hasLlJobs())
+$H$H$H Example jobs
+
+#foreach ($job in $jobs.getLlJobs())
+$H$H$H$H Job: $job.getJobBaseName() ([repository link]($URL/$application/jobs/$job.getJobBaseName()))
+
+$H$H$H$H$H Job description ([download]($RAW_URL/jobs/$job.getJobBaseName()/job.ll))
+
+```
+$job.getLl()
+```
+
+#if($job.getInputFiles().size() > 0)
+$H$H$H$H$H Input file(s)
+
+#foreach ($file in $job.getInputFiles())
+#set ($fileName = $file.getName())
+ * $fileName ([download]($RAW_URL/jobs/$job.getJobBaseName()/files/$fileName))
+#end
+
+#end
+
+#end
+#end
+
+#end
+

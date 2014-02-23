@@ -14,14 +14,8 @@ import org.apache.commons.io.FileUtils
  */
 class ExportModule extends ExportModulesCliParameters {
 
-    public void validate() {
-        if ( ! new File(getOutput()).exists() ) {
-            new File(getOutput()).mkdirs()
-        }
-    }
 
-    public void execute() {
-
+    public static List<File> getAllModuleFiles(File appRoot, String token) {
         def allmodules = []
         appRoot.traverse(type: FileType.FILES) { it ->
             if (it.getAbsolutePath().toLowerCase().contains(File.separator + AppManage.MODULE_DIR_NAME + File.separator)) {
@@ -30,9 +24,14 @@ class ExportModule extends ExportModulesCliParameters {
         }
 
         def modules = allmodules.findAll { it ->
-            it.getAbsolutePath().toLowerCase().contains(token)
+            it.getAbsolutePath().toLowerCase().contains(token.toLowerCase())
         }
+        return modules
+    }
 
+    public void execute() {
+
+        def modules = getAllModuleFiles(appRoot, token)
         println "Copying modules..."
 
         modules.each { file ->
@@ -42,11 +41,11 @@ class ExportModule extends ExportModulesCliParameters {
             appDir.mkdirs()
             File newFile = new File(appDir, file.getName())
 
-            if ( verbose ) {
-                if ( newFile.exists() ) {
-                    println "Replacing module: "+app+"/"+file.getName()
+            if (verbose) {
+                if (newFile.exists()) {
+                    println "Replacing module: " + app + "/" + file.getName()
                 } else {
-                    println "Copying module: "+app+"/"+file.getName()
+                    println "Copying module: " + app + "/" + file.getName()
                 }
 
             }
@@ -58,12 +57,18 @@ class ExportModule extends ExportModulesCliParameters {
 
         }
 
-        if ( isUpdateGrisu() ) {
+        if (isUpdateGrisu()) {
             println "Updating info..."
             ServiceInterface si = client.getServiceInterface();
             si.admin(Constants.REFRESH_GRID_INFO, null);
         }
 
+    }
+
+    public void validate() {
+        if (!new File(getOutput()).exists()) {
+            new File(getOutput()).mkdirs()
+        }
     }
 
 

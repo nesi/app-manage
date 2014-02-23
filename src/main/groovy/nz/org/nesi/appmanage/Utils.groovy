@@ -33,7 +33,10 @@ class Utils {
         }
 
         for ( def file : appRoot.listFiles() ) {
-            if (file.isDirectory() && file.getName().equalsIgnoreCase(app)) {
+            if (file.isDirectory() && file.getName().equals(app)) {
+                return file
+            } else if ( file.isDirectory() && file.getName().equalsIgnoreCase(app)) {
+                System.err.println("Case inconsistency: "+app+", using "+file.getName()+" but that might cause problems for some usecases.");
                 return file
             }
         }
@@ -62,7 +65,9 @@ class Utils {
         }
 
         int i = relPath.indexOf(File.separator)
-        relPath = relPath.substring(0, i)
+        if ( i >= 0 ) {
+            relPath = relPath.substring(0, i)
+        }
 
         return relPath
 

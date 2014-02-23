@@ -3,7 +3,7 @@
 	<groupId>nz.org.nesi</groupId>
 	<artifactId>app-manage</artifactId>
 	<packaging>jar</packaging>
-	<version>0.6</version>
+	<version>0.8-SNAPSHOT</version>
 	<name>commandline application to maintain a structured application repository</name>
 
 	<parent>
@@ -41,7 +41,7 @@
         <connection>scm:git:git://github.com/nesi/app-manage.git</connection>
         <developerConnection>scm:git:git@github.com:nesi/app-manage.git</developerConnection>
         <url>https://github.com/nesi/app-manage</url>
-        <tag>0.6</tag>
+        <tag>HEAD</tag>
     </scm>
     <organization>
         <name>Grisu open source project</name>
@@ -49,6 +49,11 @@
 
 	<dependencies>
 
+        <dependency>
+            <groupId>grisu</groupId>
+            <artifactId>grid-jcommons</artifactId>
+            <version>2.13</version>
+        </dependency>
 		<!-- the main grisu dependency. -->
 		<!-- comment this and uncomment the 'grisu-client-swing' dependency below if you need the swing dependencies -->
 		<dependency>
@@ -60,10 +65,29 @@
 		</dependency>
 
         <dependency>
+            <groupId>nz.org.nesi</groupId>
+            <artifactId>grin</artifactId>
+            <version>0.7</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
             <version>2.3.1.201302201838-r</version>
         </dependency>
+
+        <dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-tools</artifactId>
+			<version>2.0</version>
+		</dependency>
 
 <!-- 		<dependency> -->
 <!-- 			<groupId>grisu.frontend</groupId> -->
@@ -500,7 +524,7 @@
 
 
 	<properties>
-		<grisu.version>0.8</grisu.version>
+		<grisu.version>0.8.2</grisu.version>
 	</properties>
 </project>
 
