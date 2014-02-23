@@ -17,30 +17,33 @@
 
     app-manage -a <path_to_app_repo> create-doc --applications <appname> --template <path_to_template>
 
-For example, use the [default template](
+For example, download the [default template](https://github.com/nesi/app-manage/blob/develop/application.md.vm) into
+your home directory, to create the documentation page for MATLAB, you'd issue:
+
+    app-manage -a /home/markus/applications create-doc --applications MATLAB --template /home/markus/applications.md.vm
 
 ### For all applications, write files to directory
 
     app-manage -a <path_to_app_repo> create-doc --template <path_to_template> -o <path_to_output_dir>
 
-### Create summary page, write to stdout
+Example with the default template in the home directory:
 
-    app-manage
+    app-manage -a /home/markus/applications create-doc --template /home/markus/applications.md.vm -o /home/markus/applications.wiki/apps
 
+### Create summary page, write to stdout or file
 
+    app-manage -a <path_to_app_repo> create-list --template <path_to_list_template> [-o <path_to_list_page_file>]
 
-External templates can be referenced by name up until the first . in the filename (to lowercase)
+For example, download the [default list template](https://github.com/nesi/app-manage/blob/develop/list_template.md.vm) into
+your home directory, to create the list page:
 
-create doc for one application, write to stdout
-java -jar target/app-manage-binary.jar  -a /home/markus/src/config/applications create-doc --applications Abaqus --template /home/markus/src/Utils/app-manage/application.md.vm
+    app-manage -a /home/markus/applications create-list --template /home/markus/list_template.md.vm
 
-create list
--a /home/markus/src/config/applications create-list --template /home/markus/src/Utils/app-manage/list_template.md.vm
+Or, to write the same thing to a file:
 
+    app-manage -a /home/markus/applications create-list --template /home/markus/list_template.md.vm -o /home/markus/applications.wiki/list.md
 
-Create app pages, then summary
-java -jar target/app-manage-binary.jar  -a /home/markus/src/config/applications create-doc --template /home/markus/src/Utils/app-manage/application.md.vm -o /home/markus/doc/test/apps
+### Create summary page, only consider applications with a certain tag
 
-java -jar target/app-manage-binary.jar  -a /home/markus/src/config/applications create-list --template /home/markus/src/Utils/app-manage/list_template.md.vm -o /home/markus/doc/test/list.md
-or
-java -jar target/app-manage-binary.jar  -a /home/markus/src/config/applications create-list -a /home/markus/src/config/applications create-list --template /home/markus/src/Utils/app-manage/list_template.md.vm --tags top_app,Programming
+TODO
+
