@@ -5,6 +5,12 @@
  * git (optional)
  * custom templates for application pages & application-list pages
 
+# Notes
+
+ * Documentation on how to create templates and which values are available, check out the comments in the 2 default templates
+   * application page template: https://github.com/nesi/app-manage/blob/develop/application.md.vm
+   * application list page template: https://github.com/nesi/app-manage/blob/develop/list_template.md.vm
+
 # Usage
 
 ## Import modules into application repository (if not already there)
