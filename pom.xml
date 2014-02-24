@@ -3,7 +3,7 @@
 	<groupId>nz.org.nesi</groupId>
 	<artifactId>app-manage</artifactId>
 	<packaging>jar</packaging>
-	<version>0.7.1-SNAPSHOT</version>
+	<version>0.7.1</version>
 	<name>commandline application to maintain a structured application repository</name>
 
 	<parent>
@@ -41,7 +41,7 @@
         <connection>scm:git:git://github.com/nesi/app-manage.git</connection>
         <developerConnection>scm:git:git@github.com:nesi/app-manage.git</developerConnection>
         <url>https://github.com/nesi/app-manage</url>
-        <tag>HEAD</tag>
+        <tag>0.7.1</tag>
     </scm>
     <organization>
         <name>Grisu open source project</name>
