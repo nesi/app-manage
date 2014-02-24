@@ -38,6 +38,8 @@ Example with the default template in the home directory:
 
 ### Create summary page, write to stdout or file
 
+This will create a page that lists (and links to) all applications, and writes to stdout (or, if you specify '-o', to a file).
+
     app-manage -a <path_to_app_repo> create-list --template <path_to_list_template> [-o <path_to_list_page_file>]
 
 For example, download the [default list template](https://github.com/nesi/app-manage/blob/develop/list_template.md.vm) into
@@ -51,5 +53,13 @@ Or, to write the same thing to a file:
 
 ### Create summary page, only consider applications with a certain tag
 
-TODO
+This will create a page that lists (and links to) applications that are marked with one or more of the specified tags,
+then writes to stdout (or, if you specify '-o', to a file).
+
+    app manage -a <path_to_app_repo> create-list --template <path_to_template> --tags <comma-seperated-list-of-tags-to-include>
+
+For example, download the [default list template](https://github.com/nesi/app-manage/blob/develop/list_template.md.vm) into
+your home directory, to create the list page for 'top_app' applications:
+
+    app manage -a /home/markus/src/config/applications create-list --template /home/markus/doc/list_template.md.vm --tags top_app
 
