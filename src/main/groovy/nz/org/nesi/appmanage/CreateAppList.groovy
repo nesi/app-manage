@@ -1,5 +1,6 @@
 package nz.org.nesi.appmanage
 import com.google.common.collect.Maps
+import com.google.common.collect.Sets
 import grisu.jcommons.view.html.VelocityUtils
 import nz.org.nesi.appmanage.exceptions.AppFileException
 import nz.org.nesi.appmanage.model.Documentation
@@ -76,9 +77,9 @@ class CreateAppList extends CreateAppListCliParameters {
 
     public void execute() {
 
-        List<String> tags = null;
+        Set<String> tags = null;
         if ( getTags() ) {
-            tags = getTags().split(",")
+            tags = getTags().split(",") as Set<String>
         }
 
 
@@ -87,7 +88,7 @@ class CreateAppList extends CreateAppListCliParameters {
                 def appFolder = Utils.getApplicationFolder(getAppRoot(), app)
                 try {
                     Documentation temp = new Documentation(appFolder, getAppRoot())
-                    if ( ! tags || temp.getTags().intersect(tags) ) {
+                    if ( ! tags || Sets.intersection(temp.getTags(), tags as Set).size() > 0 ) {
                         appsToProcess.put(temp.getApplicationName(), temp)
                     }
                 } catch (AppFileException afe) {
@@ -99,7 +100,7 @@ class CreateAppList extends CreateAppListCliParameters {
             getAppRoot().listFiles().sort { it.name }.each { appFolder ->
                 try {
                     Documentation temp = new Documentation(appFolder, getAppRoot())
-                    if ( ! tags || temp.getTags().intersect(tags) ) {
+                    if ( ! tags || Sets.intersection(temp.getTags(), tags).size() > 0 ) {
                         appsToProcess.put(temp.getApplicationName(), temp)
                     }
                 } catch (AppFileException afe) {
