@@ -16,6 +16,12 @@
 ## Import modules into application repository (if not already there)
 
     app-manage -v import-modules -t Auckland/pan -i /share/apps/Modules/modulefiles/Apps
+    
+If you have several locations where modules are stored and you want to tag each of those with different tags, you can do so via:
+
+    app-manage -v import-modules -t Auckland/pan -i /share/apps/Modules/modulefiles/Apps --ensure-tags app[,otherTag]
+    app-manage -v import-modules -t Auckland/pan -i /share/apps/Modules/modulefiles/Compilers --ensure-tags compiler[,otherTag]
+
 
 ## Generate documentation
 
