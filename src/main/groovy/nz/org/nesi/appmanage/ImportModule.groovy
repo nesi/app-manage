@@ -1,9 +1,9 @@
 package nz.org.nesi.appmanage
-
 import com.google.common.collect.Sets
 import grisu.control.ServiceInterface
 import grisu.jcommons.constants.Constants
 import groovy.io.FileType
+import nz.org.nesi.appmanage.model.Documentation
 import org.apache.commons.io.FileUtils
 /**
  * Project: grisu
@@ -70,6 +70,12 @@ class ImportModule extends ImportModulesCliParameters {
             newFile.setExecutable(true, false)
             newFile.setReadable(true, false)
             newFile.setWritable(true, true)
+
+            if ( getTags() ) {
+                Documentation doc = new Documentation(appDir, getAppRoot())
+
+                doc.ensureTags(getTags().split(",") as Set);
+            }
 
         }
 

@@ -12,9 +12,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.ssl.asn1.Strings;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -55,6 +53,8 @@ public class Documentation {
 
     private final String appName;
     private final File propsFile;
+    private final Properties props = new Properties();
+
     private final String docPageContent;
 
     private final Map<String, Object> properties = Maps.newLinkedHashMap();
@@ -93,31 +93,8 @@ public class Documentation {
         properties.put("application", this.appName);
 
         propsFile = new File(this.docRoot, APP_PROPERTIES_NAME);
-        if (propsFile.exists()) {
-            Properties props = new Properties();
-            try {
-                props.load(new FileInputStream(propsFile));
-                for (String key : props.stringPropertyNames()) {
-                    if (TAGS_PROPERTIES_KEY.equalsIgnoreCase(key)) {
-                        String value = (String) props.get(key);
-                        if (!StringUtils.isBlank(value)) {
-                            for (String token : Strings.split(value, ',')) {
-                                tags.add(token.trim());
-                            }
-                            properties.put(TAGS_PROPERTIES_KEY, tags);
-                        }
-                    } else {
-                        properties.put(key, props.get(key));
-                    }
-                }
-            } catch (Exception e) {
-                throw new AppFileException("Can't load application properties from '" + propsFile.getAbsolutePath() + "'", e);
-            }
-            for (String key : props.stringPropertyNames()) {
-                properties.put(key, props.get(key));
-            }
 
-        }
+        loadProperties();
 
         if (docRoot != null && docRoot.isDirectory()) {
             for (File file : docRoot.listFiles()) {
@@ -235,7 +212,35 @@ public class Documentation {
         return versions;
     }
 
+    private void loadProperties() {
+        if (propsFile.exists()) {
+            properties.clear();
+            tags.clear();
+            try {
+                props.load(new FileInputStream(propsFile));
+                for (String key : props.stringPropertyNames()) {
+                    if (TAGS_PROPERTIES_KEY.equalsIgnoreCase(key)) {
+                        String value = (String) props.get(key);
+                        if (!StringUtils.isBlank(value)) {
+                            for (String token : Strings.split(value, ',')) {
+                                tags.add(token.trim());
+                            }
+                            properties.put(TAGS_PROPERTIES_KEY, tags);
+                        }
+                    } else {
+                        properties.put(key, props.get(key));
+                    }
+                }
+            } catch (Exception e) {
+                throw new AppFileException("Can't load application properties from '" + propsFile.getAbsolutePath() + "'", e);
+            }
 
+            for (String key : props.stringPropertyNames()) {
+                properties.put(key, props.get(key));
+            }
+
+        }
+    }
 
     public File getApplicationRoot() {
         return this.appRoot;
@@ -326,6 +331,39 @@ public class Documentation {
             e.printStackTrace();
         }
 
+    }
+
+    public void ensureTags(Set<String> tags) throws IOException {
+        for ( String tag : tags ) {
+            addTag(tag);
+        }
+    }
+
+    public void addTag(String tag) throws IOException {
+
+        if ( hasTag(tag) ) {
+            return;
+        }
+
+        createAppPropertiesFile();
+
+        String currentProps = props.getProperty(TAGS_PROPERTIES_KEY);
+
+        if ( StringUtils.isBlank(currentProps) ) {
+            props.setProperty(TAGS_PROPERTIES_KEY, tag);
+        } else {
+            props.setProperty(TAGS_PROPERTIES_KEY, currentProps+","+tag);
+        }
+
+        saveProperties("Auto-added tag: "+tag);
+
+        loadProperties();
+
+    }
+    
+    private void saveProperties(String comment) throws IOException {
+        FileOutputStream fos = new FileOutputStream(propsFile);
+        props.store(fos, comment);
     }
 
     public List<File> createMissingFiles() throws IOException {

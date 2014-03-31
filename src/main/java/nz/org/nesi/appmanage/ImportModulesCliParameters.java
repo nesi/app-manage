@@ -12,6 +12,10 @@ abstract class ImportModulesCliParameters extends AppManageModule {
 
     @Parameter(names = {"-t", "--token"}, description = "the token under which the modules are to be copied, e.g. auckland/pan")
     private String token = "";
+
+    @Parameter(names = {"--ensure-tags"}, description = "make sure that all applications imported are tagged with the specified (comma-separated) tags")
+    private String tags = "";
+
 	public String getInput() {
 		return input;
 	}
@@ -24,4 +28,7 @@ abstract class ImportModulesCliParameters extends AppManageModule {
         return token;
     }
 
+    public String getTags() {
+        return tags;
+    }
 }
