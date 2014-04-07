@@ -24,7 +24,7 @@ class ExportModule extends ExportModulesCliParameters {
         }
 
         def modules = allmodules.findAll { it ->
-            it.getAbsolutePath().toLowerCase().contains(token.toLowerCase())
+            it.getAbsolutePath().toLowerCase().contains(File.separator+token.toLowerCase())
         }
         return modules
     }

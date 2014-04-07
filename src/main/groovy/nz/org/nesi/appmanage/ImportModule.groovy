@@ -36,6 +36,8 @@ class ImportModule extends ImportModulesCliParameters {
 
         printMessage("Copying modules...")
 
+        def docMap = [:]
+
         allmodules.each { file ->
 
             def app
@@ -71,11 +73,63 @@ class ImportModule extends ImportModulesCliParameters {
             newFile.setReadable(true, false)
             newFile.setWritable(true, true)
 
+            Documentation doc = new Documentation(appDir, getAppRoot())
+            docMap[app] = doc
+
             if ( getTags() ) {
-                Documentation doc = new Documentation(appDir, getAppRoot())
 
                 doc.ensureTags(getTags().split(",") as Set);
             }
+
+        }
+
+        if (isSync()) {
+
+            File targetRoot = new File(getInput())
+
+            // deleting modules for empty application directories
+            targetRoot.eachFile (FileType.DIRECTORIES, { dir ->
+                if ( ! docMap.get(dir.getName()) ) {
+//                    println "EMPTY: " + dir
+                    def potentialAppDir = new File(dir.getName(), getAppRoot())
+                    if (potentialAppDir.exists()) {
+                        docMap[dir.getName()] = new Documentation(new File(dir.getName(), getAppRoot()), getAppRoot())
+                    }
+
+                }
+            }
+            )
+
+            docMap.each{ app, doc ->
+
+                def versions = doc.getVersions()
+
+//                println "app "+app
+//                println "doc "+doc.getApplicationFolder()
+//                println "versions "+versions
+
+                File moduleDir = new File(targetRoot, app)
+
+                def valid_versions = []
+
+                moduleDir.eachFile(FileType.FILES) { file ->
+                    valid_versions << file.getName()
+                }
+
+                //println "target "+moduleDir+" "+valid_versions
+
+                for (String version : versions) {
+                    if (! valid_versions.contains(version)) {
+                        def msg = 'deleting module in application repository: '+app+"/"+version
+                        printMessage(msg, false, true)
+                        boolean deleted = doc.deleteModule(version)
+                    }
+                }
+
+
+            }
+
+
 
         }
 

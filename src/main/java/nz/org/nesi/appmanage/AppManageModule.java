@@ -26,12 +26,16 @@ abstract class AppManageModule {
         this.verbose = client.getMainParams().isVerbose();
     }
 
-    public void printMessage(String msg, boolean error) {
+    public void printMessage(String msg, boolean error, boolean force) {
         if (error) {
             System.err.println(msg);
-        } else if (verbose) {
+        } else if (verbose||force) {
             System.out.println(msg);
         }
+    }
+
+    public void printMessage(String msg, boolean error) {
+        printMessage(msg, error, false);
     }
 
     public void printMessage(String msg) {

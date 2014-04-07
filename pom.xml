@@ -3,7 +3,7 @@
 	<groupId>nz.org.nesi</groupId>
 	<artifactId>app-manage</artifactId>
 	<packaging>jar</packaging>
-	<version>0.7.2-SNAPSHOT</version>
+	<version>0.7.4-SNAPSHOT</version>
 	<name>commandline application to maintain a structured application repository</name>
 
 	<parent>

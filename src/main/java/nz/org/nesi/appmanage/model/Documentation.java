@@ -66,6 +66,8 @@ public class Documentation {
 
     private final String template;
 
+    private final List<File> moduleFiles;
+
     public Documentation(File appFolder, File appRoot) {
         this(appFolder, appRoot, null);
     }
@@ -128,7 +130,7 @@ public class Documentation {
 //        }
 
 
-        List<File> moduleFiles = ExportModule.getAllModuleFiles(getApplicationRoot(), this.appName + "/modules/Auckland/pan");
+        moduleFiles = ExportModule.getAllModuleFiles(getApplicationRoot(), this.appName + "/modules/Auckland/pan");
 
         for (File file : moduleFiles) {
             //String app = Utils.getApplication(file, appRoot);
@@ -262,6 +264,15 @@ public class Documentation {
         return this.appName;
     }
 
+    public boolean deleteModule(String version) {
+        for ( File file : getModuleFiles() ) {
+            if ( file.getName().equals(version)) {
+                return file.delete();
+            }
+        }
+        return false;
+    }
+
     public File getDocFile(String relativeFilename) {
         File temp = new File(docRoot, relativeFilename);
 
@@ -294,6 +305,10 @@ public class Documentation {
 
     public Jobs getJobs() {
         return jobs;
+    }
+
+    public List<File> getModuleFiles() {
+        return moduleFiles;
     }
 
     public void createAppPropertiesFile() throws IOException {
