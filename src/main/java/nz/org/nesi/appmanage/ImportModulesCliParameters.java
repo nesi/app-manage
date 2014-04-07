@@ -16,7 +16,14 @@ abstract class ImportModulesCliParameters extends AppManageModule {
     @Parameter(names = {"--ensure-tags"}, description = "make sure that all applications imported are tagged with the specified (comma-separated) tags")
     private String tags = "";
 
-	public String getInput() {
+    @Parameter(names = {"--sync"}, description = "sync folders (delete modules in the target folder that are not present in the source)")
+    private boolean sync = false;
+
+    public boolean isSync() {
+        return sync;
+    }
+
+    public String getInput() {
 		return input;
 	}
 
