@@ -22,6 +22,11 @@ If you have several locations where modules are stored and you want to tag each 
     app-manage -v import-modules -t Auckland/pan -i /share/apps/Modules/modulefiles/Apps --ensure-tags app[,otherTag]
     app-manage -v import-modules -t Auckland/pan -i /share/apps/Modules/modulefiles/Compilers --ensure-tags compiler[,otherTag]
 
+### delete modules that are in the application repository but not in the modules folder (anymore)
+
+    app-manage -v import-modules -t Auckland/pan -i /share/apps/Modules/modulefiles/Apps --sync
+    
+This will delete all the modules under '<application>/modules/Auckland/pan' for which no equivalent in the modules folder exists. If the modules folder is empty, all modules will be deleted. If no folder for an application exists in the module folder, nothing will be deleted.
 
 ## Generate documentation
 
