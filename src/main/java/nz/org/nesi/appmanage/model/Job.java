@@ -19,7 +19,7 @@ import java.util.List;
 public class Job {
 
     public static final String LL_JOB_DESCRIPTION_FILE = "job.ll";
-    public static final String SLURM_JOB_DESCRIPTION_FILE = "job.slurm";
+    public static final String SLURM_JOB_DESCRIPTION_FILE = "job.sl";
     public static final String GRISU_JOB_DESCRIPTION_FILE = "job.grisu";
     public static final String INPUT_FILES_DIRECTORY_NAME = "files";
 
