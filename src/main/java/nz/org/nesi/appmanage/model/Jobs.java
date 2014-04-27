@@ -97,6 +97,16 @@ public class Jobs {
         return result;
     }
 
+    public List<Job> getSlurmJobs() {
+        List<Job> result = Lists.newArrayList();
+        for ( Job j : getJobs() ) {
+            if (StringUtils.isNotBlank(j.getSlurm()) ) {
+                result.add(j);
+            }
+        }
+        return result;
+    }
+
     public String toString() {
         StringBuffer result = new StringBuffer();
         for ( Job j : getJobs() ) {

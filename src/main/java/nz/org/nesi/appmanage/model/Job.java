@@ -19,6 +19,7 @@ import java.util.List;
 public class Job {
 
     public static final String LL_JOB_DESCRIPTION_FILE = "job.ll";
+    public static final String SLURM_JOB_DESCRIPTION_FILE = "job.slurm";
     public static final String GRISU_JOB_DESCRIPTION_FILE = "job.grisu";
     public static final String INPUT_FILES_DIRECTORY_NAME = "files";
 
@@ -29,6 +30,7 @@ public class Job {
 
     private final File grisuJobDescription;
     private final File llJobDescription;
+    private final File slurmJobDescription;
 
     private final List<File> inputFiles = Lists.newArrayList();
 
@@ -56,6 +58,12 @@ public class Job {
             grisuJobDescription = temp;
         } else {
             grisuJobDescription = null;
+        }
+        temp = new File(jobFolder, SLURM_JOB_DESCRIPTION_FILE);
+        if ( temp.exists() && temp.isFile() ) {
+            slurmJobDescription = temp;
+        } else {
+            slurmJobDescription = null;
         }
         temp = new File(jobFolder, INPUT_FILES_DIRECTORY_NAME);
         if ( temp.exists() && temp.isDirectory() ) {
@@ -86,10 +94,26 @@ public class Job {
         return llJobDescription;
     }
 
+    public File getSlurmJobDescription() {
+        return slurmJobDescription;
+    }
+
     public String getLl() {
         try {
             if ( getLoadlevelerJobDescription() != null ) {
                 return FileUtils.readFileToString(getLoadlevelerJobDescription());
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getSlurm() {
+        try {
+            if ( getSlurmJobDescription() != null ) {
+                return FileUtils.readFileToString(getSlurmJobDescription());
             } else {
                 return null;
             }
