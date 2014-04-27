@@ -77,6 +77,10 @@ public class Jobs {
         return getGrisuJobs().size() > 0;
     }
 
+    public boolean hasSlurmJobs() {
+        return getSlurmJobs().size() > 0;
+    }
+
     public List<Job> getLlJobs() {
         List<Job> result = Lists.newArrayList();
         for ( Job j : getJobs() ) {

@@ -33,11 +33,13 @@ Available variables:
             * getJobs() : a collection of all example jobs in the 'jobs' subdirectory (e.g. https://github.com/nesi/applications/tree/master/Java/jobs)
                   - methods that can be called on that object:
                         * getJobsFolder() : reference to the 'jobs' folder in the file system
-                        * getJobs() : all jobs (Grisu & LL job descriptions)
+                        * getJobs() : all jobs (Grisu & LL & Slurm job descriptions)
                         * getLlJobs() : all jobs with a LL job description
                         * getGrisuJobs() : all jobs with a Grisu job description
+                        * getSlurmJobs() : all jobs with a Slurm job description
                         * hasLlJobs() : whether this application has any jobs with a LL job description
                         * hasGrisuJobs() : whether this application has any jobs with a Grisu job description
+                        * hasSlurmJobs() : whether this application has any jobs with a slurm job description
                   - methods that can be called on the 'job' object you get when iterating through the getJobs() method:
                         * getJobFolder() : the path to the folder (as Java File object)
                         * getJobBaseName() : the name of this job (aka name of the folder that contains the job)
@@ -45,6 +47,7 @@ Available variables:
                         * getLoadLevelerJobDescription() : the path to the LL job description for this job (as a Java File object)
                         * getGrisu() : the Grisu job description as a String
                         * getLl() : the LL job description as a String
+                        * getSlurm() : the Slurm job description as a String
                         * getInputFiles() : a collection of the paths to all the input files for this job
 *#
 
