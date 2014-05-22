@@ -160,19 +160,24 @@ public class Documentation {
                 Object homepage = getProperty("homepage");
                 if (homepage == null) {
                     for (String line : moduleContent.split("\n")) {
-                        if (line.toLowerCase().contains("http")) {
-                            int i = line.indexOf("http");
-                            int j = line.indexOf(" ", i);
-                            String temp = null;
-                            if (j <= 0) {
-                                temp = line.substring(i);
-                            } else {
-                                temp = line.substring(i, j);
-                            }
+                        try {
+                            if (line.toLowerCase().contains("http")) {
+                                int i = line.indexOf("http");
+                                int j = line.indexOf(" ", i);
+                                String temp = null;
+                                if ( j <= 0 ) {
+                                    temp = line.substring(i);
+                                } else {
+                                    temp = line.substring(i, j);
+                                }
 
-                            temp = temp.replaceAll("\\{|\\}", "");
-                            temp = temp.trim();
-                            getProperties().put("homepage", temp);
+                                temp = temp.replaceAll("\\{|\\}", "");
+                                temp = temp.trim();
+                                getProperties().put("homepage", temp);
+                                break;
+                            }
+                        } catch (Exception ex) {
+                            
                         }
                     }
                 }
@@ -375,7 +380,7 @@ public class Documentation {
         loadProperties();
 
     }
-    
+
     private void saveProperties(String comment) throws IOException {
         FileOutputStream fos = new FileOutputStream(propsFile);
         props.store(fos, comment);
