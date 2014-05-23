@@ -31,6 +31,9 @@ class ImportModule extends ImportModulesCliParameters {
             if ( it.getName().endsWith("~") ) {
                 return
             }
+            if ( it.getName().equalsIgnoreCase("default") ) {
+                return
+            }
             allmodules << it
         }
 
