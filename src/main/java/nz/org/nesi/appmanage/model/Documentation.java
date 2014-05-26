@@ -92,11 +92,12 @@ public class Documentation {
         this.docRoot = new File(appFolder, DOC_FOLDER);
         this.appName = Utils.getApplication(appFolder, appRoot);
 
-        properties.put("application", this.appName);
-
         propsFile = new File(this.docRoot, APP_PROPERTIES_NAME);
 
         loadProperties();
+
+        properties.put("application", this.appName);
+
 
         if (docRoot != null && docRoot.isDirectory()) {
             for (File file : docRoot.listFiles()) {
