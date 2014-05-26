@@ -54,15 +54,13 @@
             <artifactId>grid-jcommons</artifactId>
             <version>2.13</version>
         </dependency>
-		<!-- the main grisu dependency. -->
-		<!-- comment this and uncomment the 'grisu-client-swing' dependency below if you need the swing dependencies -->
-		<dependency>
-			<groupId>grisu.frontend</groupId>
-			<artifactId>grisu-client</artifactId>
-			<version>${grisu.version}</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>grisu.frontend</groupId>-->
+			<!--<artifactId>grisu-client</artifactId>-->
+			<!--<version>${grisu.version}</version>-->
+			<!--<type>jar</type>-->
+			<!--<scope>compile</scope>-->
+		<!--</dependency>-->
 
         <dependency>
             <groupId>nz.org.nesi</groupId>

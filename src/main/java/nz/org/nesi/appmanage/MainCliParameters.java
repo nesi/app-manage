@@ -1,12 +1,11 @@
 package nz.org.nesi.appmanage;
 
 import com.beust.jcommander.Parameter;
-import grisu.frontend.view.cli.GrisuCliParameters;
 import grisu.jcommons.git.GitRepoUpdater;
 
 import java.io.File;
 
-public class MainCliParameters extends GrisuCliParameters {
+public class MainCliParameters {
 
 	@Parameter(names = { "-a", "--applications" }, description = "the path to the applications repository")
 	private String root = new File(".").getAbsolutePath();

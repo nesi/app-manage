@@ -1,8 +1,6 @@
 package nz.org.nesi.appmanage;
 
 import com.beust.jcommander.JCommander;
-import grisu.frontend.control.login.LoginManager;
-import grisu.frontend.view.cli.GrisuCliClient;
 
 /**
  * Project: grisu
@@ -11,13 +9,11 @@ import grisu.frontend.view.cli.GrisuCliClient;
  * Date: 30/10/13
  * Time: 10:52 AM
  */
-public class AppManage extends GrisuCliClient<MainCliParameters> {
+public class AppManage {
 
     public static final String MODULE_DIR_NAME = "modules";
 
     public static void main(String[] args) throws Exception{
-        // basic housekeeping
-        LoginManager.initGrisuClient("app-manage");
 
         // helps to parse commandline arguments, if you don't want to create
         // your own parameter class, just use DefaultCliParameters
@@ -59,7 +55,6 @@ public class AppManage extends GrisuCliClient<MainCliParameters> {
     private final AppManageModule commandClass;
 
     public AppManage(MainCliParameters params, ExportModule expParams, ImportModule impParams, CreateDocumentationCliParameters createDocParams, CreateStubsCliParameters createStubsParams, CreateAppListCliParameters createListParams, CompareCliParameters compareCliParameters, String[] args) throws Exception {
-        super(params, args);
         this.mainParams = params;
         this.exportModulesCliParameters = expParams;
         this.importModulesCliParameters = impParams;
@@ -104,13 +99,14 @@ public class AppManage extends GrisuCliClient<MainCliParameters> {
             jc.usage();
             System.exit(1);
         }
+
+        run();
     }
 
     public MainCliParameters getMainParams() {
         return mainParams;
     }
 
-    @Override
     public void run() {
 
         this.exportModulesCliParameters.setClient(this);

@@ -27,10 +27,6 @@ abstract class ImportModulesCliParameters extends AppManageModule {
 		return input;
 	}
 
-    public boolean isUpdateGrisu() {
-        return updateGrisu;
-    }
-
     public String getToken() {
         return token;
     }
