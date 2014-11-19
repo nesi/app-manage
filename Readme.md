@@ -2,6 +2,7 @@
 
  * a populated application repository, with modules in the appropriate place (e.g. https://github.com/nesi/applications)
  * Java
+ * maven
  * git (optional)
  * custom templates for application pages & application-list pages
 
