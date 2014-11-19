@@ -17,7 +17,10 @@
     git clone git@github.com:nesi/app-manage.git
 
     # build
-    mvn clean install   # creates binary in target/
+    mvn clean install   # creates binary in target/app-manage-binary.jar
+
+    # create deb & rpm packages
+    mvn clean install -Pdeb,rpm # creates target/app-manage-xxx.deb & target/rpm/app-manage/RPMS/noarch/app-manage-xxx.noarch.rpm
 
 # Usage
 

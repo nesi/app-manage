@@ -306,19 +306,6 @@
 	</build>
 
 	<profiles>
-		<profile>
-			<id>exec</id>
-
-			<dependencies>
-				<dependency>
-					<groupId>bouncycastle</groupId>
-					<artifactId>bcprov-jdk15</artifactId>
-					<version>140</version>
-					<scope>compile</scope>
-				</dependency>
-			</dependencies>
-
-		</profile>
 
 		<profile>
 			<id>deb</id>
