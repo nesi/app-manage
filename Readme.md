@@ -1,7 +1,7 @@
 # Requirements
 
  * a populated application repository, with modules in the appropriate place (e.g. https://github.com/nesi/applications)
- * Java (version 6, version 7 not tested)
+ * Java
  * git (optional)
  * custom templates for application pages & application-list pages
 
