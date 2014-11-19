@@ -1,6 +1,5 @@
 package nz.org.nesi.appmanage
 
-import grisu.control.ServiceInterface
 import grisu.jcommons.constants.Constants
 import groovy.io.FileType
 import org.apache.commons.io.FileUtils
@@ -57,11 +56,6 @@ class ExportModule extends ExportModulesCliParameters {
 
         }
 
-        if (isUpdateGrisu()) {
-            println "Updating info..."
-            ServiceInterface si = client.getServiceInterface();
-            si.admin(Constants.REFRESH_GRID_INFO, null);
-        }
 
     }
 

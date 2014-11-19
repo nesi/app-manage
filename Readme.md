@@ -11,6 +11,14 @@
    * application page template: https://github.com/nesi/app-manage/blob/develop/application.md.vm
    * application list page template: https://github.com/nesi/app-manage/blob/develop/list_template.md.vm
 
+# Building
+
+    # checkout
+    git clone git@github.com:nesi/app-manage.git
+
+    # build
+    mvn clean install   # creates binary in target/
+
 # Usage
 
 ## Import modules into application repository (if not already there)

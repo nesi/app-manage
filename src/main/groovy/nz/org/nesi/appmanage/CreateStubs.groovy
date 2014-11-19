@@ -1,6 +1,5 @@
 package nz.org.nesi.appmanage
 import com.google.common.collect.Maps
-import grisu.frontend.control.login.LoginManager
 import nz.org.nesi.appmanage.exceptions.AppFileException
 import nz.org.nesi.appmanage.model.Documentation
 import org.apache.commons.io.FileUtils
@@ -26,9 +25,6 @@ class CreateStubs extends nz.org.nesi.appmanage.CreateStubsCliParameters {
         def args = ["-v", "-a",
                 "/home/markus/src/config/applications", "create-doc", "--applications",
                 "Abaqus,Java", "--output-dir", "/home/markus/doc/applications.wiki"];
-
-        // basic housekeeping
-        LoginManager.initGrisuClient("create-doc-confluence");
 
         // helps to parse commandline arguments, if you don't want to create
         // your own parameter class, just use DefaultCliParameters

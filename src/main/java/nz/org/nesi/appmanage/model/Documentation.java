@@ -2,6 +2,8 @@ package nz.org.nesi.appmanage.model;
 
 import com.beust.jcommander.internal.Lists;
 import com.beust.jcommander.internal.Maps;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import grisu.jcommons.utils.PackageFileHelper;
 import grisu.jcommons.view.html.VelocityUtils;
@@ -10,7 +12,6 @@ import nz.org.nesi.appmanage.Utils;
 import nz.org.nesi.appmanage.exceptions.AppFileException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.ssl.asn1.Strings;
 
 import java.io.*;
 import java.util.*;
@@ -230,7 +231,7 @@ public class Documentation {
                     if (TAGS_PROPERTIES_KEY.equalsIgnoreCase(key)) {
                         String value = (String) props.get(key);
                         if (!StringUtils.isBlank(value)) {
-                            for (String token : Strings.split(value, ',')) {
+                            for (String token : Splitter.on(',').split(value)) {
                                 tags.add(token.trim());
                             }
                             properties.put(TAGS_PROPERTIES_KEY, tags);

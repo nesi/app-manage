@@ -9,13 +9,13 @@
 	<parent>
 		<groupId>nz.org.nesi</groupId>
 		<artifactId>nesi</artifactId>
-		<version>1.0</version>
+		<version>1.1</version>
 	</parent>
 
 	<repositories>
 		<repository>
-			<id>bestgrid.public.release</id>
-			<url>http://code.ceres.auckland.ac.nz/nexus/content/groups/public/</url>
+			<id>nesi.public.release</id>
+			<url>http://code.nesi.org.nz/nexus/content/groups/public/</url>
 			<releases>
 				<enabled>true</enabled>
 				<updatePolicy>daily</updatePolicy>
@@ -52,23 +52,37 @@
         <dependency>
             <groupId>grisu</groupId>
             <artifactId>grid-jcommons</artifactId>
-            <version>2.13</version>
+            <version>2.14</version>
+			<exclusions>
+				<exclusion>
+					<groupId>nz.org.nesi</groupId>
+					<artifactId>nesi</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>1.32</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.2.1</version>
+		</dependency>
 		<!-- the main grisu dependency. -->
 		<!-- comment this and uncomment the 'grisu-client-swing' dependency below if you need the swing dependencies -->
 		<dependency>
-			<groupId>grisu.frontend</groupId>
-			<artifactId>grisu-client</artifactId>
-			<version>${grisu.version}</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
 		</dependency>
 
-        <dependency>
-            <groupId>nz.org.nesi</groupId>
-            <artifactId>grin</artifactId>
-            <version>0.7</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>nz.org.nesi</groupId>-->
+            <!--<artifactId>grin</artifactId>-->
+            <!--<version>0.7</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -103,13 +117,13 @@
 			the bcprov jar in the same directory as your executable jar, or you just
 			do nothing. Grisu will try to download it in the background and put it in
 			the classpath once your application is executed the first time... -->
-		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk15</artifactId>
-			<version>145</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>bouncycastle</groupId>-->
+			<!--<artifactId>bcprov-jdk15</artifactId>-->
+			<!--<version>145</version>-->
+			<!--<type>jar</type>-->
+			<!--<scope>provided</scope>-->
+		<!--</dependency>-->
 
 		<!-- further grisu dependencies, incuded by default but can be enabled/disabled
 			if not needed and you want a smaller assembly -->
@@ -156,32 +170,45 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<compilerId>groovy-eclipse-compiler</compilerId>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.codehaus.groovy</groupId>
-						<artifactId>groovy-eclipse-compiler</artifactId>
-						<version>2.5.1-M3</version>
-						<exclusions>
-							<exclusion>
-								<groupId>org.codehaus.groovy</groupId>
-								<artifactId>groovy-eclipse-batch</artifactId>
-							</exclusion>
-						</exclusions>
-					</dependency>
-					<dependency>
-						<groupId>org.codehaus.groovy</groupId>
-						<artifactId>groovy-eclipse-batch</artifactId>
-						<version>1.8.0-03</version>
-					</dependency>
-				</dependencies>
-			</plugin>
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>addSources</goal>
+              <!--<goal>addTestSources</goal>-->
+              <goal>generateStubs</goal>
+              <goal>compile</goal>
+              <goal>testGenerateStubs</goal>
+              <goal>testCompile</goal>
+              <goal>removeStubs</goal>
+              <goal>removeTestStubs</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <!-- if including source jars, use the no-fork goals
+             otherwise both the Groovy sources and Java stub sources will get included in your jar -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+              <goal>test-jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
 
 			<!-- replace version in file -->
 			<plugin>
